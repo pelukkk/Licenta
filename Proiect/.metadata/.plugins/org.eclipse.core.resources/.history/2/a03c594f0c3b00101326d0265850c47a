@@ -1,0 +1,15 @@
+/*
+ * MotorControl.h
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+
+#ifndef USEREXTENSIONS_MOTORCONTROL_H_
+#define USEREXTENSIONS_MOTORCONTROL_H_
+
+
+
+
+
+#endif /* USEREXTENSIONS_MOTORCONTROL_H_ */

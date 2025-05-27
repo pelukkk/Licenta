@@ -1,0 +1,3 @@
+../UserExtensions/Src/Wheel.c:16:6:HAL_TIM_IC_CaptureCallback	16	static
+../UserExtensions/Src/Wheel.c:21:6:HAL_GPIO_EXTI_Callback	16	static
+../UserExtensions/Src/Wheel.c:35:6:UpdateWheel	4	static

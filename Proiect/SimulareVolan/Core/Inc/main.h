@@ -36,7 +36,18 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef struct __attribute__((__packed__)){
+	uint8_t id;
+	uint64_t buttons;
+	int16_t X;
+	int16_t Y;
+	int16_t Z;
+	int16_t RX;
+	int16_t RY;
+	int16_t RZ;
+	int16_t Dial;
+	int16_t Slider;
+}wheelReport;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -66,6 +77,8 @@ void Error_Handler(void);
 #define TIM_1_8_RCR 2
 #define TIM_1_8_DEADTIME_CLOCKS 20
 #define TIM_1_8_CLOCK_HZ 168000000
+#define S0_MUX_Pin GPIO_PIN_2
+#define S0_MUX_GPIO_Port GPIOB
 #define EN_GATE_Pin GPIO_PIN_12
 #define EN_GATE_GPIO_Port GPIOB
 #define M0_AL_Pin GPIO_PIN_13
@@ -74,12 +87,25 @@ void Error_Handler(void);
 #define M0_BL_GPIO_Port GPIOB
 #define M0_CL_Pin GPIO_PIN_15
 #define M0_CL_GPIO_Port GPIOB
+#define ENC_Z_Pin GPIO_PIN_9
+#define ENC_Z_GPIO_Port GPIOC
+#define ENC_Z_EXTI_IRQn EXTI9_5_IRQn
 #define M0_AH_Pin GPIO_PIN_8
 #define M0_AH_GPIO_Port GPIOA
 #define M0_BH_Pin GPIO_PIN_9
 #define M0_BH_GPIO_Port GPIOA
 #define M0_CH_Pin GPIO_PIN_10
 #define M0_CH_GPIO_Port GPIOA
+#define S1_MUX_Pin GPIO_PIN_10
+#define S1_MUX_GPIO_Port GPIOC
+#define S2_MUX_Pin GPIO_PIN_11
+#define S2_MUX_GPIO_Port GPIOC
+#define Z_MUX_Pin GPIO_PIN_12
+#define Z_MUX_GPIO_Port GPIOC
+#define ENC_A_Pin GPIO_PIN_4
+#define ENC_A_GPIO_Port GPIOB
+#define ENC_B_Pin GPIO_PIN_5
+#define ENC_B_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

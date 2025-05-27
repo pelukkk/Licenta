@@ -1,0 +1,3 @@
+../UserExtensions/Src/Shifter.c:13:6:select_mux_channel	1
+../UserExtensions/Src/Shifter.c:20:15:read_mux_output	1
+../UserExtensions/Src/Shifter.c:25:6:UpdateShifter	12

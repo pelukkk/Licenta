@@ -1,0 +1,15 @@
+/*
+ * Pedals.h
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+
+#ifndef INC_PEDALS_H_
+#define INC_PEDALS_H_
+
+#include "stm32f4xx_hal.h"
+#define FILTER_SIZE 8
+
+
+#endif /* INC_PEDALS_H_ */

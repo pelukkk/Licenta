@@ -1,0 +1,16 @@
+/*
+ * Encoder.h
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+
+#ifndef USEREXTENSIONS_ENCODER_H_
+#define USEREXTENSIONS_ENCODER_H_
+
+#include "stm32f4xx_hal.h"
+#include "main.h"
+
+void UpdateWheel();
+
+#endif /* USEREXTENSIONS_ENCODER_H_ */
