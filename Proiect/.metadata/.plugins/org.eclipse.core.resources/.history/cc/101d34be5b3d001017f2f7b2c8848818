@@ -1,0 +1,11 @@
+/*
+ * MotorControl.c
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+#include "MotorControl.h"
+
+float ph = 0;
+float mag = 0.1;
+mag = fabs(mag)<0.3f?fabs(mag): 0.3f;

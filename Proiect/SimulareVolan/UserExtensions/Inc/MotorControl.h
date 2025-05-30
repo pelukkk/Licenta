@@ -8,7 +8,13 @@
 #ifndef USEREXTENSIONS_MOTORCONTROL_H_
 #define USEREXTENSIONS_MOTORCONTROL_H_
 
+#include <math.h>
+#include "stm32f4xx_hal.h"
+#include "main.h"
+#include "stm32f4xx_ll_tim.h"
 
+void SetupMotor();
+void MotorControl();
 
 
 

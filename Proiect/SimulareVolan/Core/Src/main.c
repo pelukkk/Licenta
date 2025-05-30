@@ -19,11 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "usb_device.h"
-#include <math.h>
-
-#include "Wheel.h"
-#include "Pedals.h"
-#include "Shifter.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -51,6 +46,7 @@ ADC_HandleTypeDef hadc2;
 ADC_HandleTypeDef hadc3;
 
 TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
@@ -62,7 +58,6 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 extern uint16_t clutch;
 extern uint16_t brake;
 extern uint16_t throttle;
-extern int16_t encoder;
 
 /* USER CODE END PV */
 
@@ -74,6 +69,7 @@ static void MX_TIM1_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_ADC3_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -118,9 +114,9 @@ int main(void)
   MX_TIM1_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
-  MX_ADC3_Init();
+  //MX_ADC3_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Encoder_Start_IT(&htim3, TIM_CHANNEL_ALL);
 	reportContainer.id = 0x01;
 	reportContainer.buttons = 0;
 	reportContainer.X = 0;
@@ -132,42 +128,20 @@ int main(void)
 	reportContainer.Dial = 0;
 	reportContainer.Slider = 0;
 
-//  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-//  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-//  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-//  HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
-//  HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
-//  HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
-//  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0*htim1.Init.Period);
-//  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0*htim1.Init.Period);
-//  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0*htim1.Init.Period);
-//
-//  HAL_GPIO_WritePin(EN_GATE_GPIO_Port, EN_GATE_Pin, GPIO_PIN_SET);
-
+  StartEncoder();
+  SetupMotor();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  float ph = 0;
-  float mag = 0.1;
-  mag = fabs(mag)<0.3f?fabs(mag): 0.3f;
-
   while (1)
   {
 	UpdateShifter();
-	UpdatePedals();
+	//UpdatePedals();
 	UpdateWheel();
-
-	USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, (uint8_t *)&reportContainer, 25);
-	HAL_Delay(10);
-
-	//float tst = mag*sinf(ph);
-
-	//__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint32_t)((0.5f+mag*sinf(ph))*htim1.Init.Period));
-    //__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (uint32_t)((0.5f+mag*sinf(ph+3.1415926f*2/3))*htim1.Init.Period));
-	//__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (uint32_t)((0.5f+mag*sinf(ph-3.1415926f*2/3))*htim1.Init.Period));
-	//ph += 3.1415926e-2f;
+	USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, (uint8_t *)&reportContainer, sizeof(reportContainer));
+	HAL_Delay(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -259,7 +233,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_0;
+  sConfig.Channel = ADC_CHANNEL_10;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
@@ -311,7 +285,7 @@ static void MX_ADC2_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Channel = ADC_CHANNEL_11;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
   if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
@@ -363,7 +337,7 @@ static void MX_ADC3_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_2;
+  sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
   if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
@@ -469,6 +443,51 @@ static void MX_TIM1_Init(void)
 }
 
 /**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 0;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 4294967295;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
+
+}
+
+/**
   * @brief TIM3 Initialization Function
   * @param None
   * @retval None
@@ -531,9 +550,9 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, S0_MUX_Pin|EN_GATE_Pin, GPIO_PIN_RESET);
