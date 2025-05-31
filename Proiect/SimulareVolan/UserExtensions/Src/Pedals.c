@@ -9,9 +9,7 @@
 
 extern wheelReport reportContainer;
 
-extern ADC_HandleTypeDef hadc3;
-
-volatile uint16_t adcValues[3] = {0};
+extern uint16_t adc3_buffer[3];
 
 uint16_t clutchBuffer[FILTER_SIZE] = {0};
 uint8_t clutchIndex = 0;
@@ -43,19 +41,10 @@ uint16_t FilterADC(uint16_t *buffer, uint8_t *index, uint16_t newSample)
 
 void UpdatePedals()
 {
-    HAL_ADC_Start(&hadc3);
 
-    for (int i = 0; i < 3; i++)
-    {
-        HAL_ADC_PollForConversion(&hadc3, HAL_MAX_DELAY);
-        adcValues[i] = HAL_ADC_GetValue(&hadc3);
-    }
-
-    HAL_ADC_Stop(&hadc3);
-
-    rawClutch   = adcValues[0];  // ADC3_IN0
-    rawBrake    = adcValues[1];  // ADC3_IN1
-    rawThrottle = adcValues[2];  // ADC3_IN2
+    rawClutch   = adc3_buffer[0];  // ADC3_IN0
+    rawBrake    = adc3_buffer[1];  // ADC3_IN1
+    rawThrottle = adc3_buffer[2];  // ADC3_IN2
 
     clutch   = FilterADC(clutchBuffer, &clutchIndex, rawClutch);
     brake    = FilterADC(brakeBuffer, &brakeIndex, rawBrake);

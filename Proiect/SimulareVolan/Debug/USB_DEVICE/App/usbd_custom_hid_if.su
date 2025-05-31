@@ -1,4 +1,4 @@
 ../USB_DEVICE/App/usbd_custom_hid_if.c:767:15:CUSTOM_HID_Init_FS	4	static
 ../USB_DEVICE/App/usbd_custom_hid_if.c:778:15:CUSTOM_HID_DeInit_FS	4	static
 ../USB_DEVICE/App/usbd_custom_hid_if.c:791:15:CUSTOM_HID_OutEvent_FS	32	static
-../USB_DEVICE/App/usbd_custom_hid_if.c:884:17:CUSTOM_HID_GetReport	24	static
+../USB_DEVICE/App/usbd_custom_hid_if.c:885:17:CUSTOM_HID_GetReport	24	static

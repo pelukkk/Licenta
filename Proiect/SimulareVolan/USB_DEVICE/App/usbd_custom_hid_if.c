@@ -846,6 +846,7 @@ static int8_t CUSTOM_HID_OutEvent_FS(uint8_t event_idx, uint8_t state)
 
 			case 3: // Stop
 				effects[id].state = 0;
+				ffb_active = false;
 				break;
 		}
 		break;

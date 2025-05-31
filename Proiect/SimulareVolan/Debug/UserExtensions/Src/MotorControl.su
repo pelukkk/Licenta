@@ -1,2 +1,2 @@
-../UserExtensions/Src/MotorControl.c:33:6:SetupMotor	16	static
-../UserExtensions/Src/MotorControl.c:66:6:MotorControl	32	static
+../UserExtensions/Src/MotorControl.c:34:6:SetupMotor	16	static
+../UserExtensions/Src/MotorControl.c:67:6:MotorControl	32	static

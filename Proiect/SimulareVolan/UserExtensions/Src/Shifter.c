@@ -28,7 +28,6 @@ void UpdateShifter()
 	  for (uint8_t i = 0; i < 8; ++i)
 	  {
 	      select_mux_channel(i);
-	      HAL_Delay(1); // Allow some time for the MUX to settle
 	      if (read_mux_output())
 	      {
 			  switch(i)
