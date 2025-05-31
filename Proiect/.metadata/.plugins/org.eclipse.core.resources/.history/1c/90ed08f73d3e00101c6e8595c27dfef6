@@ -1,0 +1,102 @@
+/*
+ * MotorControl.c
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+#include "MotorControl.h"
+#include "ForceFeedback.h"
+
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim3;
+extern ADC_HandleTypeDef hadc1;
+extern ADC_HandleTypeDef hadc2;
+extern int8_t zeroLearned;
+extern wheelReport reportContainer;
+extern FFB_Effect effects[MAX_EFFECTS];
+
+#define PI_F 3.1415926f
+
+volatile float ph = 0;
+volatile float mag = 0.05;
+volatile float tst = 0;
+
+volatile int32_t C = 0;
+
+volatile int32_t c0 = 0;
+volatile int32_t c1 = 0;
+volatile int32_t c2 = 0;
+
+volatile int32_t C0 = 0;
+volatile int32_t C1 = 0;
+
+void SetupMotor()
+{
+	mag = fabs(mag)<0.3f?fabs(mag): 0.3f;
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
+	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0*htim1.Init.Period);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0*htim1.Init.Period);
+	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0*htim1.Init.Period);
+
+	HAL_GPIO_WritePin(EN_GATE_GPIO_Port, EN_GATE_Pin, GPIO_PIN_SET);
+	HAL_TIM_Base_Start_IT(&htim1);
+
+	HAL_Delay(10);
+
+	for(int i=0;i<256;i++)
+	{
+		HAL_ADC_Start(&hadc1);
+		HAL_ADC_Start(&hadc2);
+		HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+		HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
+		C0 += HAL_ADC_GetValue(&hadc1);
+		HAL_Delay(2);
+		C1 += HAL_ADC_GetValue(&hadc2);
+		HAL_Delay(2);
+	}
+	C0 >>= 8;
+	C1 >>= 8;
+}
+
+void MotorControl(void)
+{
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_Start(&hadc2);
+
+	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+	HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
+
+	c0 = HAL_ADC_GetValue(&hadc1) - C0;
+	c1 = HAL_ADC_GetValue(&hadc2) - C1;
+	c2 = -(c0 + c1);
+
+	C = sqrtf(c0*c0 + c1*c1 + c2*c2);
+
+	reportContainer.Z = C;
+	reportContainer.Dial = c0;
+	reportContainer.Slider = c1;
+
+	if(!zeroLearned) return;
+
+	//ph = -((int16_t)__HAL_TIM_GET_COUNTER(&htim3))*(PI_F*2*15/(4*4096)) ;
+	ph = -((int16_t)__HAL_TIM_GET_COUNTER(&htim3))*(PI_F*2*15/(4*4096))-PI_F/2 ;
+
+    float sine   = sinf(ph);
+    float sineB  = sinf(ph + 2*PI_F/3);
+    float sineC  = sinf(ph - 2*PI_F/3);
+
+    uint32_t dutyA = (uint32_t)((0.5f + mag*sine ) * htim1.Init.Period);
+    uint32_t dutyB = (uint32_t)((0.5f + mag*sineB) * htim1.Init.Period);
+    uint32_t dutyC = (uint32_t)((0.5f + mag*sineC) * htim1.Init.Period);
+
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dutyA);
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, dutyB);
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, dutyC);
+
+}
+

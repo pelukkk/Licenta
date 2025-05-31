@@ -1,0 +1,66 @@
+/*
+ * Pedals.c
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+
+#include "Pedals.h"
+
+extern wheelReport reportContainer;
+
+extern ADC_HandleTypeDef hadc3;
+
+volatile uint16_t adcValues[3] = {0};
+
+uint16_t clutchBuffer[FILTER_SIZE] = {0};
+uint8_t clutchIndex = 0;
+volatile uint16_t rawClutch = 0;
+uint16_t clutch = 0;
+
+uint16_t brakeBuffer[FILTER_SIZE] = {0};
+uint8_t brakeIndex = 0;
+volatile uint16_t rawBrake = 0;
+uint16_t brake = 0;;
+
+uint16_t throttleBuffer[FILTER_SIZE] = {0};
+uint8_t throttleIndex = 0;
+volatile uint16_t rawThrottle = 0;
+uint16_t throttle = 0;
+
+uint16_t FilterADC(uint16_t *buffer, uint8_t *index, uint16_t newSample)
+{
+    buffer[*index] = newSample;
+    *index = (*index + 1) % FILTER_SIZE;
+
+    uint32_t sum = 0;
+    for (int i = 0; i < FILTER_SIZE; i++) {
+        sum += buffer[i];
+    }
+
+    return sum / FILTER_SIZE;
+}
+
+void UpdatePedals()
+{
+    HAL_ADC_Start(&hadc3);
+
+    for (int i = 0; i < 3; i++) {
+        HAL_ADC_PollForConversion(&hadc3, HAL_MAX_DELAY);
+        adcValues[i] = HAL_ADC_GetValue(&hadc3);
+    }
+
+    HAL_ADC_Stop(&hadc3);
+
+    rawClutch   = adcValues[0];  // ADC3_IN0
+    rawBrake    = adcValues[1];  // ADC3_IN1
+    rawThrottle = adcValues[2];  // ADC3_IN2
+
+    clutch   = FilterADC(clutchBuffer, &clutchIndex, rawClutch);
+    brake    = FilterADC(brakeBuffer, &brakeIndex, rawBrake);
+    throttle = FilterADC(throttleBuffer, &throttleIndex, rawThrottle);
+
+    reportContainer.RX = clutch;
+    reportContainer.RY = brake;
+    reportContainer.RZ = throttle;
+}

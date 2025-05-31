@@ -11,6 +11,8 @@ extern wheelReport reportContainer;
 
 extern ADC_HandleTypeDef hadc3;
 
+volatile uint16_t adcValues[3] = {0};
+
 uint16_t clutchBuffer[FILTER_SIZE] = {0};
 uint8_t clutchIndex = 0;
 volatile uint16_t rawClutch = 0;
@@ -41,25 +43,25 @@ uint16_t FilterADC(uint16_t *buffer, uint8_t *index, uint16_t newSample)
 
 void UpdatePedals()
 {
-	// Read clutch from ADC1
-	HAL_ADC_Start(&hadc3);
-	HAL_ADC_PollForConversion(&hadc3, HAL_MAX_DELAY);
-	rawClutch = HAL_ADC_GetValue(&hadc3);
-	clutch = FilterADC(clutchBuffer, &clutchIndex, rawClutch);
+    HAL_ADC_Start(&hadc3);
 
-	// Read brake from ADC2
-	HAL_ADC_Start(&hadc3);
-	HAL_ADC_PollForConversion(&hadc3, HAL_MAX_DELAY);
-	rawBrake = HAL_ADC_GetValue(&hadc3);
-	brake = FilterADC(brakeBuffer, &brakeIndex, rawBrake);
+    for (int i = 0; i < 3; i++)
+    {
+        HAL_ADC_PollForConversion(&hadc3, HAL_MAX_DELAY);
+        adcValues[i] = HAL_ADC_GetValue(&hadc3);
+    }
 
-	// Read throttle from ADC3
-	HAL_ADC_Start(&hadc3);
-	HAL_ADC_PollForConversion(&hadc3, HAL_MAX_DELAY);
-	rawThrottle = HAL_ADC_GetValue(&hadc3);
-	throttle = FilterADC(throttleBuffer, &throttleIndex, rawThrottle);
+    HAL_ADC_Stop(&hadc3);
 
-	reportContainer.RX = clutch;
-	reportContainer.RY = brake;
-	reportContainer.RZ = throttle;
+    rawClutch   = adcValues[0];  // ADC3_IN0
+    rawBrake    = adcValues[1];  // ADC3_IN1
+    rawThrottle = adcValues[2];  // ADC3_IN2
+
+    clutch   = FilterADC(clutchBuffer, &clutchIndex, rawClutch);
+    brake    = FilterADC(brakeBuffer, &brakeIndex, rawBrake);
+    throttle = FilterADC(throttleBuffer, &throttleIndex, rawThrottle);
+
+    reportContainer.RX = clutch;
+    reportContainer.RY = brake;
+    reportContainer.RZ = throttle;
 }

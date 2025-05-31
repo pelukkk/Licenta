@@ -1,2 +1,2 @@
-../UserExtensions/Src/Pedals.c:29:10:FilterADC	32	static
-../UserExtensions/Src/Pedals.c:42:6:UpdatePedals	8	static
+../UserExtensions/Src/Pedals.c:31:10:FilterADC	32	static
+../UserExtensions/Src/Pedals.c:44:6:UpdatePedals	16	static

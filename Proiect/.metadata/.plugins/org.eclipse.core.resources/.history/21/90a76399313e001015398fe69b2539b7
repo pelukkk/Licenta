@@ -1,0 +1,34 @@
+/*
+ * Encoder.c
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+
+#include <Wheel.h>
+
+extern TIM_HandleTypeDef htim3;
+
+extern wheelReport reportContainer;
+
+volatile int8_t zeroLearned = 0;
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == ENC_Z_Pin)
+	{
+		__HAL_TIM_SET_COUNTER(&htim3, 0); // Resetam timer-ul la 0
+		EXTI->IMR &= ~(1 << 9);  // Dezactivam intreruperea doar pe linia 9
+		zeroLearned = 1;
+	}
+}
+
+void StartEncoder()
+{
+	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+}
+
+void UpdateWheel()
+{
+	reportContainer.X = __HAL_TIM_GET_COUNTER(&htim3);
+}
