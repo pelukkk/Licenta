@@ -77,6 +77,8 @@ void Error_Handler(void);
 #define TIM_1_8_RCR 2
 #define TIM_1_8_DEADTIME_CLOCKS 20
 #define TIM_1_8_CLOCK_HZ 168000000
+#define M0_nCS_Pin GPIO_PIN_13
+#define M0_nCS_GPIO_Port GPIOC
 #define Z_MUX_Pin GPIO_PIN_3
 #define Z_MUX_GPIO_Port GPIOA
 #define S0_MUX_Pin GPIO_PIN_2
@@ -98,10 +100,6 @@ void Error_Handler(void);
 #define M0_BH_GPIO_Port GPIOA
 #define M0_CH_Pin GPIO_PIN_10
 #define M0_CH_GPIO_Port GPIOA
-#define S1_MUX_Pin GPIO_PIN_10
-#define S1_MUX_GPIO_Port GPIOC
-#define S2_MUX_Pin GPIO_PIN_11
-#define S2_MUX_GPIO_Port GPIOC
 #define ENC_A_Pin GPIO_PIN_4
 #define ENC_A_GPIO_Port GPIOB
 #define ENC_B_Pin GPIO_PIN_5

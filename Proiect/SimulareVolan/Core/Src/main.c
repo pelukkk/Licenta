@@ -26,6 +26,8 @@
 #include "MotorControl.h"
 #include "Shifter.h"
 #include "Pedals.h"
+#include "DRV8301.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,9 +49,12 @@
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
 ADC_HandleTypeDef hadc3;
+
 DMA_HandleTypeDef hdma_adc1;
 DMA_HandleTypeDef hdma_adc2;
 DMA_HandleTypeDef hdma_adc3;
+
+SPI_HandleTypeDef hspi3;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
@@ -68,7 +73,8 @@ extern uint16_t throttle;
 uint16_t adc1_dma_val;
 uint16_t adc2_dma_val;
 uint16_t adc3_buffer[3];
-uint32_t counter=0;
+
+uint16_t drv_ctrl2 = 0;
 
 /* USER CODE END PV */
 
@@ -82,6 +88,7 @@ static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_ADC3_Init(void);
+static void MX_SPI3_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -99,41 +106,42 @@ static void MX_ADC3_Init(void);
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_TIM3_Init();
-  MX_USB_DEVICE_Init();
-  MX_TIM1_Init();
-  MX_ADC1_Init();
-  MX_ADC2_Init();
-  MX_TIM2_Init();
-  MX_ADC3_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_DMA_Init();
+	MX_TIM3_Init();
+	MX_USB_DEVICE_Init();
+	MX_TIM1_Init();
+	MX_ADC1_Init();
+	MX_ADC2_Init();
+	MX_TIM2_Init();
+	MX_ADC3_Init();
+	MX_SPI3_Init();
+	/* USER CODE BEGIN 2 */
 
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&adc1_dma_val, 1);
-  HAL_ADC_Start_DMA(&hadc2, (uint32_t*)&adc2_dma_val, 1);
-  HAL_ADC_Start_DMA(&hadc3, (uint32_t*)adc3_buffer, 3);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&adc1_dma_val, 1);
+	HAL_ADC_Start_DMA(&hadc2, (uint32_t*)&adc2_dma_val, 1);
+	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)adc3_buffer, 3);
 
 	reportContainer.id = 0x01;
 	reportContainer.buttons = 0;
@@ -146,25 +154,30 @@ int main(void)
 	reportContainer.Dial = 0;
 	reportContainer.Slider = 0;
 
-  StartEncoder();
-  SetupMotor();
-  /* USER CODE END 2 */
+	StartEncoder();
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	SetupDRV8301();
 
-  while (1)
-  {
-	UpdateShifter();
-	UpdatePedals();
-	UpdateWheel();
-	USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, (uint8_t *)&reportContainer, sizeof(reportContainer));
-	HAL_Delay(1);
-    /* USER CODE END WHILE */
-	counter++;
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+	SetupMotor();
+
+
+	/* USER CODE END 2 */
+
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
+
+	while (1)
+	{
+		//UpdateShifter();
+		UpdatePedals();
+		UpdateWheel();
+		USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, (uint8_t *)&reportContainer, sizeof(reportContainer));
+		HAL_Delay(1);
+		/* USER CODE END WHILE */
+
+		/* USER CODE BEGIN 3 */
+	}
+	/* USER CODE END 3 */
 }
 
 /**
@@ -383,6 +396,44 @@ static void MX_ADC3_Init(void)
   /* USER CODE BEGIN ADC3_Init 2 */
 
   /* USER CODE END ADC3_Init 2 */
+
+}
+
+/**
+  * @brief SPI3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI3_Init(void)
+{
+
+  /* USER CODE BEGIN SPI3_Init 0 */
+
+  /* USER CODE END SPI3_Init 0 */
+
+  /* USER CODE BEGIN SPI3_Init 1 */
+
+  /* USER CODE END SPI3_Init 1 */
+  /* SPI3 parameter configuration*/
+  hspi3.Instance = SPI3;
+  hspi3.Init.Mode = SPI_MODE_MASTER;
+  hspi3.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi3.Init.DataSize = SPI_DATASIZE_16BIT;
+  hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi3.Init.CLKPhase = SPI_PHASE_2EDGE;
+  hspi3.Init.NSS = SPI_NSS_SOFT;
+  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+  hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi3.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI3_Init 2 */
+
+  /* USER CODE END SPI3_Init 2 */
 
 }
 
@@ -607,16 +658,23 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, S0_MUX_Pin|EN_GATE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(M0_nCS_GPIO_Port, M0_nCS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, S1_MUX_Pin|S2_MUX_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, S0_MUX_Pin|EN_GATE_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : M0_nCS_Pin */
+  GPIO_InitStruct.Pin = M0_nCS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(M0_nCS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : Z_MUX_Pin */
   GPIO_InitStruct.Pin = Z_MUX_Pin;
@@ -636,13 +694,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(ENC_Z_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : S1_MUX_Pin S2_MUX_Pin */
-  GPIO_InitStruct.Pin = S1_MUX_Pin|S2_MUX_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);

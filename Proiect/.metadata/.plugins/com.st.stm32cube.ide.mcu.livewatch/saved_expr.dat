@@ -4,11 +4,11 @@ g_hhid
 readValue
 c0
 c1
+c2
 C
 C0
 C1
-c2
 adc1_dma_val
 adc2_dma_val
 adc3_buffer
-counter
+drv_ctrl2

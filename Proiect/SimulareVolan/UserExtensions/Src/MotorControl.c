@@ -47,7 +47,7 @@ void SetupMotor()
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0*htim1.Init.Period);
 	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0*htim1.Init.Period);
 
-	HAL_GPIO_WritePin(EN_GATE_GPIO_Port, EN_GATE_Pin, GPIO_PIN_SET);
+	//HAL_GPIO_WritePin(EN_GATE_GPIO_Port, EN_GATE_Pin, GPIO_PIN_SET);
 
 	HAL_TIM_Base_Start_IT(&htim1);
 
@@ -78,8 +78,8 @@ void MotorControl(void)
 
 	if(!zeroLearned) return;
 
-	//ph = -((int16_t)__HAL_TIM_GET_COUNTER(&htim3))*(PI_F*2*15/(4*4096)) + (effects[0].magnitude/10000* (PI_F/2)) ;
-	ph = -((int16_t)__HAL_TIM_GET_COUNTER(&htim3))*(PI_F*2*15/(4*4096))-PI_F/2 ;
+	ph = ((int16_t)__HAL_TIM_GET_COUNTER(&htim3))*(PI_F*2*15/(4*4096));//+ (effects[0].magnitude/10000* (PI_F/2)) ;
+	//ph = -((int16_t)__HAL_TIM_GET_COUNTER(&htim3))*(PI_F*2*15/(4*4096))-PI_F/2 ;
 
     float sine   = sinf(ph);
     float sineB  = sinf(ph + 2*PI_F/3);

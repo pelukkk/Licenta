@@ -1,0 +1,49 @@
+/*
+ * DRV8301.c
+ *
+ *  Created on: Jun 3, 2025
+ *      Author: Marco
+ */
+
+#include "DRV8301.h"
+
+// Example GPIO definitions for CS pin (adjust to your hardware)
+#define DRV8301_CS_GPIO_Port M0_nCS_GPIO_Port
+#define DRV8301_CS_Pin       M0_nCS_Pin
+
+extern SPI_HandleTypeDef hspi3;
+
+uint16_t DRV8301_Transfer(uint16_t data)
+{
+    uint16_t rx = 0;
+    HAL_GPIO_WritePin(DRV8301_CS_GPIO_Port, DRV8301_CS_Pin, GPIO_PIN_RESET);
+    HAL_SPI_TransmitReceive(&hspi3, (uint8_t*)&data, (uint8_t*)&rx, 1, HAL_MAX_DELAY);
+    HAL_GPIO_WritePin(DRV8301_CS_GPIO_Port, DRV8301_CS_Pin, GPIO_PIN_SET);
+    return rx;
+}
+
+uint16_t DRV8301_ReadRegister(uint8_t reg)
+{
+    uint16_t cmd = 0x8000 | ((reg & 0x0F) << 11);
+    return DRV8301_Transfer(cmd);
+}
+
+void DRV8301_WriteRegister(uint8_t reg, uint16_t value)
+{
+    uint16_t cmd = ((reg & 0x0F) << 11) | (value & 0x07FF);
+    DRV8301_Transfer(cmd);
+}
+
+void DRV8301_SetCSAGain(uint8_t gain_setting)
+{
+    // Other bits left as 0, just setting CSA_GAIN (bits 5:4)
+    uint16_t ctrl1_val = gain_setting & 0x0030;
+    DRV8301_WriteRegister(DRV8301_REG_CTRL1, ctrl1_val);
+}
+
+void DRV8301_Init(void)
+{
+    HAL_GPIO_WritePin(GPIOB, EN_GATE_Pin, GPIO_PIN_SET);
+    HAL_Delay(1);
+    DRV8301_SetCSAGain(DRV8301_CSA_GAIN_80);
+}

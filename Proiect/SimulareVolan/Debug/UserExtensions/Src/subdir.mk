@@ -5,6 +5,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../UserExtensions/Src/DRV8301.c \
 ../UserExtensions/Src/ForceFeedback.c \
 ../UserExtensions/Src/MotorControl.c \
 ../UserExtensions/Src/Pedals.c \
@@ -12,6 +13,7 @@ C_SRCS += \
 ../UserExtensions/Src/Wheel.c 
 
 C_DEPS += \
+./UserExtensions/Src/DRV8301.d \
 ./UserExtensions/Src/ForceFeedback.d \
 ./UserExtensions/Src/MotorControl.d \
 ./UserExtensions/Src/Pedals.d \
@@ -19,6 +21,7 @@ C_DEPS += \
 ./UserExtensions/Src/Wheel.d 
 
 OBJS += \
+./UserExtensions/Src/DRV8301.o \
 ./UserExtensions/Src/ForceFeedback.o \
 ./UserExtensions/Src/MotorControl.o \
 ./UserExtensions/Src/Pedals.o \
@@ -33,7 +36,7 @@ UserExtensions/Src/%.o UserExtensions/Src/%.su UserExtensions/Src/%.cyclo: ../Us
 clean: clean-UserExtensions-2f-Src
 
 clean-UserExtensions-2f-Src:
-	-$(RM) ./UserExtensions/Src/ForceFeedback.cyclo ./UserExtensions/Src/ForceFeedback.d ./UserExtensions/Src/ForceFeedback.o ./UserExtensions/Src/ForceFeedback.su ./UserExtensions/Src/MotorControl.cyclo ./UserExtensions/Src/MotorControl.d ./UserExtensions/Src/MotorControl.o ./UserExtensions/Src/MotorControl.su ./UserExtensions/Src/Pedals.cyclo ./UserExtensions/Src/Pedals.d ./UserExtensions/Src/Pedals.o ./UserExtensions/Src/Pedals.su ./UserExtensions/Src/Shifter.cyclo ./UserExtensions/Src/Shifter.d ./UserExtensions/Src/Shifter.o ./UserExtensions/Src/Shifter.su ./UserExtensions/Src/Wheel.cyclo ./UserExtensions/Src/Wheel.d ./UserExtensions/Src/Wheel.o ./UserExtensions/Src/Wheel.su
+	-$(RM) ./UserExtensions/Src/DRV8301.cyclo ./UserExtensions/Src/DRV8301.d ./UserExtensions/Src/DRV8301.o ./UserExtensions/Src/DRV8301.su ./UserExtensions/Src/ForceFeedback.cyclo ./UserExtensions/Src/ForceFeedback.d ./UserExtensions/Src/ForceFeedback.o ./UserExtensions/Src/ForceFeedback.su ./UserExtensions/Src/MotorControl.cyclo ./UserExtensions/Src/MotorControl.d ./UserExtensions/Src/MotorControl.o ./UserExtensions/Src/MotorControl.su ./UserExtensions/Src/Pedals.cyclo ./UserExtensions/Src/Pedals.d ./UserExtensions/Src/Pedals.o ./UserExtensions/Src/Pedals.su ./UserExtensions/Src/Shifter.cyclo ./UserExtensions/Src/Shifter.d ./UserExtensions/Src/Shifter.o ./UserExtensions/Src/Shifter.su ./UserExtensions/Src/Wheel.cyclo ./UserExtensions/Src/Wheel.d ./UserExtensions/Src/Wheel.o ./UserExtensions/Src/Wheel.su
 
 .PHONY: clean-UserExtensions-2f-Src
 
