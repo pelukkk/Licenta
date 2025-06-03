@@ -42,9 +42,9 @@ uint16_t FilterADC(uint16_t *buffer, uint8_t *index, uint16_t newSample)
 void UpdatePedals()
 {
 
-    rawClutch   = 5000 - adc3_buffer[0];  // ADC3_IN0
-    rawBrake    = 5000 - adc3_buffer[1];  // ADC3_IN1
-    rawThrottle = 5000 - adc3_buffer[2];  // ADC3_IN2
+    rawClutch   = adc3_buffer[0];  // ADC3_IN0
+    rawBrake    = adc3_buffer[1];  // ADC3_IN1
+    rawThrottle = adc3_buffer[2];  // ADC3_IN2
 
     clutch   = FilterADC(clutchBuffer, &clutchIndex, rawClutch);
     brake    = FilterADC(brakeBuffer, &brakeIndex, rawBrake);
