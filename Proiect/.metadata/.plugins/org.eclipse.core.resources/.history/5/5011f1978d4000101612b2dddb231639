@@ -9,7 +9,6 @@
 
 extern wheelReport reportContainer;
 int inGear = 0;
-int inGearCurrent = 0;
 
 void select_mux_channel(uint8_t channel)
 {
@@ -25,37 +24,43 @@ GPIO_PinState read_mux_output(void)
 
 void UpdateShifter()
 {
-	inGearCurrent = 0;
-
+	inGear = 0;
 	for (uint8_t i = 0; i < 8; ++i)
 	{
 		select_mux_channel(i);
 		if (read_mux_output())
 		{
-			inGearCurrent = 1;
-
-			if (!inGear)
+			switch(i)
 			{
-				inGear = 1;
-				switch(i)
-				{
-					case 4: reportContainer.buttons = 0x00000001; break;
-					case 1: reportContainer.buttons = 0x00000002; break;
-					case 2: reportContainer.buttons = 0x00000004; break;
-					case 3: reportContainer.buttons = 0x00000008; break;
-					case 0: reportContainer.buttons = 0x00000010; break;
-					case 5: reportContainer.buttons = 0x00000020; break;
-					case 6: reportContainer.buttons = 0x00000040; break;
-					case 7: reportContainer.buttons = 0x00000080; break;
-					default: reportContainer.buttons = 0;
-				}
+			  case 4:
+				  reportContainer.buttons = 0x00000001;
+				  break;
+			  case 1:
+				  reportContainer.buttons = 0x00000002;
+				  break;
+			  case 2:
+				  reportContainer.buttons = 0x00000004;
+				  break;
+			  case 3:
+				  reportContainer.buttons = 0x00000008;
+				  break;
+			  case 0:
+				  reportContainer.buttons = 0x00000010;
+				  break;
+			  case 5:
+				  reportContainer.buttons = 0x00000020;
+				  break;
+			  case 6:
+				  reportContainer.buttons = 0x00000040;
+				  break;
+			  case 7:
+				  reportContainer.buttons = 0x00000080;
+				  break;
+			  default:
+				  reportContainer.buttons = 0;
 			}
 		}
-	}
-
-	if (!inGearCurrent)
-	{
-		reportContainer.buttons = 0;
-		inGear = 0;
+		else inGear = 0;
+		if (!inGear) reportContainer.buttons = 0;
 	}
 }

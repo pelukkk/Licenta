@@ -169,7 +169,7 @@ int main(void)
 
 	while (1)
 	{
-		UpdateShifter();
+		//UpdateShifter();
 		UpdatePedals();
 		UpdateWheel();
 		USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, (uint8_t *)&reportContainer, sizeof(reportContainer));

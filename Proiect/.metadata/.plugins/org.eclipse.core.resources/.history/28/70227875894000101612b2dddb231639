@@ -11,6 +11,8 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 
+#define S0_MUX_Pin GPIO_PIN_2
+#define S0_MUX_GPIO_Port GPIOB
 #define S1_MUX_Pin GPIO_PIN_10
 #define S1_MUX_GPIO_Port GPIOC
 #define S2_MUX_Pin GPIO_PIN_11

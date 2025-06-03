@@ -169,7 +169,7 @@ int main(void)
 
 	while (1)
 	{
-		UpdateShifter();
+		//UpdateShifter();
 		UpdatePedals();
 		UpdateWheel();
 		USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, (uint8_t *)&reportContainer, sizeof(reportContainer));
@@ -712,13 +712,16 @@ void DisableSPI3_EnableGPIO()
 
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-	__HAL_RCC_GPIOC_CLK_ENABLE();
+	/* Enable clock for the GPIO port, if not already enabled */
+	__HAL_RCC_GPIOC_CLK_ENABLE(); // Assuming SPI3 pins are on GPIOC
 
-	GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	/* Configure SCK, MISO, MOSI as output/input as needed */
+	GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12; // PC10=SCK, PC11=MISO, PC12=MOSI
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP; // Or GPIO_MODE_INPUT if needed
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
 }
 /* USER CODE END 4 */
 

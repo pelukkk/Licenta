@@ -106,7 +106,7 @@ void Error_Handler(void);
 #define ENC_B_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-void DisableSPI3_EnableGPIO();
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
