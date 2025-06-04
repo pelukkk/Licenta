@@ -124,4 +124,3 @@ static uint8_t *CUSTOM_HID_GetReport(uint16_t *ReportLength);
 #endif
 
 #endif /* __USBD_CUSTOM_HID_IF_H__ */
-

@@ -40,7 +40,8 @@ UserExtensions/Src/ForceFeedback.o: ../UserExtensions/Src/ForceFeedback.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+ ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
+ C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc/ffb_defs.h
 C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc/ForceFeedback.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc/usbd_customhid.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h:
@@ -84,3 +85,4 @@ C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h:
+C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc/ffb_defs.h:

@@ -1,0 +1,51 @@
+/*
+ * ForceFeedback.c
+ *
+ *  Created on: Jun 4, 2025
+ *      Author: Marco
+ */
+
+#include "ForceFeedback.h"
+#include "ffb_defs.h"
+#include <string.h>
+
+static FFB_Effect effectSlots[MAX_EFFECTS];
+static uint8_t usedEffects = 0;
+FFB_BlockLoad_Feature_Data_t blockLoadReport;
+
+void FFB_Init(void) {
+    memset(effectSlots, 0, sizeof(effectSlots));
+    usedEffects = 0;
+}
+
+uint8_t FFB_CreateNewEffect(uint8_t effectType) {
+    for (uint8_t i = 0; i < MAX_EFFECTS; i++) {
+        if (effectSlots[i].type == FFB_EFFECT_NONE) {
+            effectSlots[i].type = effectType;
+            effectSlots[i].state = 0;
+            effectSlots[i].gain = 255; // default max gain
+            effectSlots[i].duration = FFB_EFFECT_DURATION_INFINITE;
+            effectSlots[i].startTime = 0;
+            effectSlots[i].startDelay = 0;
+            effectSlots[i].samplePeriod = 0;
+            memset(&effectSlots[i].conditions, 0, sizeof(FFB_Effect_Condition));
+
+            usedEffects++;
+
+            // Set up the Block Load report
+            blockLoadReport.effectBlockIndex = i + 1;
+            blockLoadReport.loadStatus = 1; // success
+            blockLoadReport.ramPoolAvailable = (MAX_EFFECTS - usedEffects) * sizeof(FFB_Effect);
+
+            return i; // Success
+        }
+    }
+
+    // No free slot
+    blockLoadReport.effectBlockIndex = 0;
+    blockLoadReport.loadStatus = 2; // full
+    blockLoadReport.ramPoolAvailable = 0;
+    return -1;
+}
+
+

@@ -12,3 +12,17 @@ adc1_dma_val
 adc2_dma_val
 adc3_buffer
 drv_ctrl2
+iq_target
+electrical_zero_count
+force
+id
+iq
+effects
+g_hhid->Report_buf
+blockLoadReport
+ph
+iq_integral
+id_integral
+vd
+vq
+zeroLearned
