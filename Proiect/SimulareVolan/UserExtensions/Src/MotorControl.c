@@ -12,6 +12,7 @@ extern TIM_HandleTypeDef htim3;
 
 extern int8_t zeroLearned;
 extern wheelReport reportContainer;
+extern FFB_Effect effects[];
 
 extern uint16_t adc1_dma_val;
 extern uint16_t adc2_dma_val;
@@ -23,9 +24,9 @@ extern uint16_t adc2_dma_val;
 #define CLAMP(x, lo, hi) ((x) < (lo) ? (lo) : ((x) > (hi) ? (hi) : (x)))
 #define ENC_COUNTS_PER_REV (4096 * 4)
 #define POLE_PAIRS 15
-#define MAX_TORQUE_CURRENT 0.2f
+#define MAX_TORQUE_CURRENT 0.5f
 
-#define ALIGN_MAGNITUDE 0.3f  // volts applied to d-axis (can be tuned)
+#define ALIGN_MAGNITUDE 0.3f
 #define ALIGN_TIME_MS 10000  // time to hold the rotor in place
 
 static int16_t electrical_zero_count = 0;
@@ -50,7 +51,7 @@ static float ph = 0;
 int16_t force = 0;
 
 static float kp = 0.002f;
-static float ki = 0.0001f;
+static float ki = 0.0005f;
 
 void AlignElectricalZero()
 {
@@ -129,7 +130,6 @@ void MotorControl(void)
     int16_t enc = (int16_t)__HAL_TIM_GET_COUNTER(&htim3);
     int16_t offset_enc = enc - electrical_zero_count;
     ph = offset_enc * (2.0f * PI_F * POLE_PAIRS / ENC_COUNTS_PER_REV);
-    //ph = -((int16_t)__HAL_TIM_GET_COUNTER(&htim3))*(PI_F*2*15/(4*4096))-PI_F/2;
 
     float sin_t = sinf(ph);
     float cos_t = cosf(ph);
@@ -145,17 +145,15 @@ void MotorControl(void)
     // --- Targets (iq_target to be set from force feedback) ---
     float id_target = 0.0f;
 
-    force = 0;  // raw output from FFB system
-    iq_target = (float)force / 32767.0f * MAX_TORQUE_CURRENT;
-    //iq_target = 1;
+    iq_target = - effects[0].magnitude;
 
 
     // --- PI Controllers ---
     vd = PI_Controller(id_target - id, &id_integral, kp, ki, MAX_VOLTAGE);
     vq = PI_Controller(iq_target - iq, &iq_integral, kp, ki, MAX_VOLTAGE);
 
-    vd = CLAMP(vd, -1.0f, 1.0f);
-    vq = CLAMP(vq, -1.0f, 1.0f);
+    vd = CLAMP(vd, -2.0f, 2.0f);
+    vq = CLAMP(vq, -2.0f, 2.0f);
 
 
     // --- Inverse Park Transform ---

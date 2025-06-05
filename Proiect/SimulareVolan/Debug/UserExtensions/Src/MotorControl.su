@@ -1,4 +1,4 @@
-../UserExtensions/Src/MotorControl.c:55:6:AlignElectricalZero	56	static
-../UserExtensions/Src/MotorControl.c:86:6:SetupMotor	16	static
-../UserExtensions/Src/MotorControl.c:121:6:MotorControl	48	static
-../UserExtensions/Src/MotorControl.c:200:7:PI_Controller	40	static
+../UserExtensions/Src/MotorControl.c:56:6:AlignElectricalZero	56	static
+../UserExtensions/Src/MotorControl.c:87:6:SetupMotor	16	static
+../UserExtensions/Src/MotorControl.c:122:6:MotorControl	48	static
+../UserExtensions/Src/MotorControl.c:198:7:PI_Controller	40	static

@@ -26,3 +26,8 @@ id_integral
 vd
 vq
 zeroLearned
+effects[0].magnitude
+effects[1].magnitude
+effects[2].magnitude
+effects[3].magnitude
+effects[4].magnitude
