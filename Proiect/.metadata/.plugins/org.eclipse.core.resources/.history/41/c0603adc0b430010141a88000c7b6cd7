@@ -44,7 +44,7 @@ static int32_t I = 0;
 // FOC state
 static float id = 0, iq = 0;
 static float id_integral = 0, iq_integral = 0;
-static float vd = 0, vq = 0, vq0=0;
+static float vd = 0, vq = 0;
 static float valpha = 0, vbeta = 0;
 static float va = 0, vb = 0, vc = 0;
 static float iq_target = 0;
@@ -52,8 +52,8 @@ static float ph = 0;
 
 int16_t force = 0;
 
-static float kp = 0.01f;
-static float ki = 0.005f;
+static float kp = 0.002f;
+static float ki = 0.0005f;
 
 
 void AlignElectricalZero()
@@ -155,15 +155,15 @@ void MotorControl(void)
     // --- Targets (iq_target to be set from force feedback) ---
     float id_target = 0.0f;
 
-    iq_target = 100.0f;
+    iq_target = 1000.0f;
 
 
     // --- PI Controllers ---
-    vd = PI_Controller(id-id_target, &id_integral, kp, ki, MAX_VOLTAGE);
-    vq0 = PI_Controller(iq-iq_target, &iq_integral, kp, ki, MAX_VOLTAGE);
+    vd = 0;//PI_Controller(id_target - id, &id_integral, kp, ki, MAX_VOLTAGE);
+    vq = PI_Controller(iq_target - iq, &iq_integral, kp, ki, MAX_VOLTAGE);
 
     vd = CLAMP(vd, -1.0f, 1.0f);
-    vq = CLAMP(vq0, -6.0f, 6.0f);
+    vq = CLAMP(vq, -1.0f, 1.0f);
 
 
     // --- Inverse Park Transform ---
@@ -178,8 +178,8 @@ void MotorControl(void)
     // --- Normalize to PWM duty ---
     float period = (float)htim1.Init.Period;
     float dutyA = (0.5f + 0.5f * va / MAX_VOLTAGE) * period;
-    float dutyB = (0.5f + 0.5f * vb / MAX_VOLTAGE) * period;
-    float dutyC = (0.5f + 0.5f * vc / MAX_VOLTAGE) * period;
+    float dutyB = (0.5f - 0.5f * vb / MAX_VOLTAGE) * period;
+    float dutyC = (0.5f - 0.5f * vc / MAX_VOLTAGE) * period;
 
     // Clamp to valid range
     dutyA = CLAMP(dutyA, 0, period);

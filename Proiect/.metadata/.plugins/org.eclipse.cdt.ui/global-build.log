@@ -156,3 +156,391 @@ Finished building: default.size.stdout
  
 Finished building: SimulareVolan.list
  
+22:10:19 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54640	   1412	   7700	  63752	   f908	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:11:00 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54640	   1412	   7700	  63752	   f908	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:11:40 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54640	   1412	   7700	  63752	   f908	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:14:48 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54640	   1412	   7700	  63752	   f908	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:18:21 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+../UserExtensions/Src/MotorControl.c: In function 'MotorControl':
+../UserExtensions/Src/MotorControl.c:156:11: warning: unused variable 'id_target' [-Wunused-variable]
+  156 |     float id_target = 0.0f;
+      |           ^~~~~~~~~
+../UserExtensions/Src/MotorControl.c: At top level:
+../UserExtensions/Src/MotorControl.c:56:14: warning: 'ki' defined but not used [-Wunused-variable]
+   56 | static float ki = 0.0005f;
+      |              ^~
+../UserExtensions/Src/MotorControl.c:55:14: warning: 'kp' defined but not used [-Wunused-variable]
+   55 | static float kp = 0.002f;
+      |              ^~
+../UserExtensions/Src/MotorControl.c:46:31: warning: 'iq_integral' defined but not used [-Wunused-variable]
+   46 | static float id_integral = 0, iq_integral = 0;
+      |                               ^~~~~~~~~~~
+../UserExtensions/Src/MotorControl.c:46:14: warning: 'id_integral' defined but not used [-Wunused-variable]
+   46 | static float id_integral = 0, iq_integral = 0;
+      |              ^~~~~~~~~~~
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54296	   1404	   7692	  63392	   f7a0	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:21:04 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+../UserExtensions/Src/MotorControl.c: In function 'MotorControl':
+../UserExtensions/Src/MotorControl.c:156:11: warning: unused variable 'id_target' [-Wunused-variable]
+  156 |     float id_target = 0.0f;
+      |           ^~~~~~~~~
+../UserExtensions/Src/MotorControl.c: At top level:
+../UserExtensions/Src/MotorControl.c:46:14: warning: 'id_integral' defined but not used [-Wunused-variable]
+   46 | static float id_integral = 0, iq_integral = 0;
+      |              ^~~~~~~~~~~
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54584	   1412	   7692	  63688	   f8c8	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:23:18 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+../UserExtensions/Src/MotorControl.c: In function 'MotorControl':
+../UserExtensions/Src/MotorControl.c:156:11: warning: unused variable 'id_target' [-Wunused-variable]
+  156 |     float id_target = 0.0f;
+      |           ^~~~~~~~~
+../UserExtensions/Src/MotorControl.c: At top level:
+../UserExtensions/Src/MotorControl.c:46:14: warning: 'id_integral' defined but not used [-Wunused-variable]
+   46 | static float id_integral = 0, iq_integral = 0;
+      |              ^~~~~~~~~~~
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54584	   1412	   7692	  63688	   f8c8	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:24:26 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+../UserExtensions/Src/MotorControl.c: In function 'MotorControl':
+../UserExtensions/Src/MotorControl.c:156:11: warning: unused variable 'id_target' [-Wunused-variable]
+  156 |     float id_target = 0.0f;
+      |           ^~~~~~~~~
+../UserExtensions/Src/MotorControl.c: At top level:
+../UserExtensions/Src/MotorControl.c:46:14: warning: 'id_integral' defined but not used [-Wunused-variable]
+   46 | static float id_integral = 0, iq_integral = 0;
+      |              ^~~~~~~~~~~
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54584	   1412	   7692	  63688	   f8c8	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:24:56 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-size  SimulareVolan.elf 
+   text	   data	    bss	    dec	    hex	filename
+  54584	   1412	   7692	  63688	   f8c8	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+22:26:54 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+../UserExtensions/Src/MotorControl.c: In function 'MotorControl':
+../UserExtensions/Src/MotorControl.c:156:11: warning: unused variable 'id_target' [-Wunused-variable]
+  156 |     float id_target = 0.0f;
+      |           ^~~~~~~~~
+../UserExtensions/Src/MotorControl.c: At top level:
+../UserExtensions/Src/MotorControl.c:46:14: warning: 'id_integral' defined but not used [-Wunused-variable]
+   46 | static float id_integral = 0, iq_integral = 0;
+      |              ^~~~~~~~~~~
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54584	   1412	   7692	  63688	   f8c8	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:29:47 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+../UserExtensions/Src/MotorControl.c: In function 'MotorControl':
+../UserExtensions/Src/MotorControl.c:156:11: warning: unused variable 'id_target' [-Wunused-variable]
+  156 |     float id_target = 0.0f;
+      |           ^~~~~~~~~
+../UserExtensions/Src/MotorControl.c: At top level:
+../UserExtensions/Src/MotorControl.c:46:14: warning: 'id_integral' defined but not used [-Wunused-variable]
+   46 | static float id_integral = 0, iq_integral = 0;
+      |              ^~~~~~~~~~~
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54588	   1412	   7700	  63700	   f8d4	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:31:02 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+../UserExtensions/Src/MotorControl.c: In function 'MotorControl':
+../UserExtensions/Src/MotorControl.c:156:11: warning: unused variable 'id_target' [-Wunused-variable]
+  156 |     float id_target = 0.0f;
+      |           ^~~~~~~~~
+../UserExtensions/Src/MotorControl.c: At top level:
+../UserExtensions/Src/MotorControl.c:46:14: warning: 'id_integral' defined but not used [-Wunused-variable]
+   46 | static float id_integral = 0, iq_integral = 0;
+      |              ^~~~~~~~~~~
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54588	   1412	   7700	  63700	   f8d4	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:32:51 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+../UserExtensions/Src/MotorControl.c: In function 'MotorControl':
+../UserExtensions/Src/MotorControl.c:156:11: warning: unused variable 'id_target' [-Wunused-variable]
+  156 |     float id_target = 0.0f;
+      |           ^~~~~~~~~
+../UserExtensions/Src/MotorControl.c: At top level:
+../UserExtensions/Src/MotorControl.c:46:14: warning: 'id_integral' defined but not used [-Wunused-variable]
+   46 | static float id_integral = 0, iq_integral = 0;
+      |              ^~~~~~~~~~~
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54592	   1412	   7700	  63704	   f8d8	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:35:29 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:35:45 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-size  SimulareVolan.elf 
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+22:35:58 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-size  SimulareVolan.elf 
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+22:38:06 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:40:08 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:40:59 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:42:15 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:42:59 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:44:02 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:45:10 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 
+22:47:09 **** Incremental Build of configuration Debug for project SimulareVolan ****
+make -j16 all 
+arm-none-eabi-gcc "../UserExtensions/Src/MotorControl.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSBD_CUSTOMHID_CTRL_REQ_GET_REPORT_ENABLED -DUSE_HAL_DRIVER -DSTM32F405xx -UUSBD_CUSTOMHID_CTRL_REQ_COMPLETE_CALLBACK_ENABLED -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../USB_DEVICE/App -I../USB_DEVICE/Target -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Inc -I"C:/Users/Marco/Documents/GitHub/Licenta/Proiect/SimulareVolan/UserExtensions/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"UserExtensions/Src/MotorControl.d" -MT"UserExtensions/Src/MotorControl.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "UserExtensions/Src/MotorControl.o"
+arm-none-eabi-g++ -o "SimulareVolan.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\Marco\Documents\GitHub\Licenta\Proiect\SimulareVolan\STM32F405RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SimulareVolan.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SimulareVolan.elf
+ 
+arm-none-eabi-size  SimulareVolan.elf 
+arm-none-eabi-objdump -h -S SimulareVolan.elf  > "SimulareVolan.list"
+   text	   data	    bss	    dec	    hex	filename
+  54648	   1412	   7700	  63760	   f910	SimulareVolan.elf
+Finished building: default.size.stdout
+ 
+Finished building: SimulareVolan.list
+ 

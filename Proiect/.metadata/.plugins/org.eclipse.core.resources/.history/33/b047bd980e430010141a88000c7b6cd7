@@ -52,8 +52,8 @@ static float ph = 0;
 
 int16_t force = 0;
 
-static float kp = 0.01f;
-static float ki = 0.005f;
+static float kp = 0.05f;
+static float ki = 0.0005f;
 
 
 void AlignElectricalZero()
@@ -163,7 +163,7 @@ void MotorControl(void)
     vq0 = PI_Controller(iq-iq_target, &iq_integral, kp, ki, MAX_VOLTAGE);
 
     vd = CLAMP(vd, -1.0f, 1.0f);
-    vq = CLAMP(vq0, -6.0f, 6.0f);
+    vq = CLAMP(vq0, -3.0f, 3.0f);
 
 
     // --- Inverse Park Transform ---
