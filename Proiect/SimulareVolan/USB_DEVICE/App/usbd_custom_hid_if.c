@@ -749,8 +749,7 @@ USBD_CUSTOM_HID_ItfTypeDef USBD_CustomHID_fops_FS =
   CUSTOM_HID_ReportDesc_FS,
   CUSTOM_HID_Init_FS,
   CUSTOM_HID_DeInit_FS,
-  CUSTOM_HID_OutEvent_FS,
-  CUSTOM_HID_GetReport
+  CUSTOM_HID_OutEvent_FS
 };
 
 /** @defgroup USBD_CUSTOM_HID_Private_Functions USBD_CUSTOM_HID_Private_Functions
@@ -952,3 +951,4 @@ USBD_CUSTOM_HID_ItfTypeDef USBD_CustomHID_fops_FS =
 /**
   * @}
   */
+

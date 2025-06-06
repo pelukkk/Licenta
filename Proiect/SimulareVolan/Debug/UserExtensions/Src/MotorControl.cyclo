@@ -1,4 +1,5 @@
-../UserExtensions/Src/MotorControl.c:56:6:AlignElectricalZero	7
-../UserExtensions/Src/MotorControl.c:87:6:SetupMotor	3
-../UserExtensions/Src/MotorControl.c:122:6:MotorControl	12
-../UserExtensions/Src/MotorControl.c:198:7:PI_Controller	5
+../UserExtensions/Src/MotorControl.c:58:6:HAL_ADCEx_InjectedConvCpltCallback	2
+../UserExtensions/Src/MotorControl.c:68:6:AlignElectricalZero	7
+../UserExtensions/Src/MotorControl.c:99:6:SetupMotor	3
+../UserExtensions/Src/MotorControl.c:138:6:MotorControl	12
+../UserExtensions/Src/MotorControl.c:214:7:PI_Controller	5

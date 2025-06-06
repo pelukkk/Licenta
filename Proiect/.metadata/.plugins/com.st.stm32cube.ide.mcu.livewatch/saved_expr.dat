@@ -8,8 +8,8 @@ c2
 C
 C0
 C1
-adc1_dma_val
-adc2_dma_val
+current_phase_a
+current_phase_b
 adc3_buffer
 drv_ctrl2
 iq_target
