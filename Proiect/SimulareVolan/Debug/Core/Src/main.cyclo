@@ -5,9 +5,9 @@
 ../Core/Src/main.c:375:13:MX_ADC3_Init	5
 ../Core/Src/main.c:445:13:MX_SPI3_Init	2
 ../Core/Src/main.c:483:13:MX_TIM1_Init	11
-../Core/Src/main.c:575:13:MX_TIM2_Init	4
-../Core/Src/main.c:620:13:MX_TIM3_Init	3
-../Core/Src/main.c:667:13:MX_DMA_Init	1
-../Core/Src/main.c:685:13:MX_GPIO_Init	1
-../Core/Src/main.c:740:6:DisableSPI3_EnableGPIO	1
-../Core/Src/main.c:760:6:Error_Handler	1
+../Core/Src/main.c:576:13:MX_TIM2_Init	4
+../Core/Src/main.c:621:13:MX_TIM3_Init	3
+../Core/Src/main.c:668:13:MX_DMA_Init	1
+../Core/Src/main.c:686:13:MX_GPIO_Init	1
+../Core/Src/main.c:741:6:DisableSPI3_EnableGPIO	1
+../Core/Src/main.c:761:6:Error_Handler	1

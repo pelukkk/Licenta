@@ -27,7 +27,7 @@ extern FFB_Effect effects[];
 #define MAX_TORQUE_CURRENT 0.5f
 
 #define ALIGN_MAGNITUDE 0.3f
-#define ALIGN_TIME_MS 2000  // time to hold the rotor in place
+#define ALIGN_TIME_MS 1000  // time to hold the rotor in place
 
 static int16_t electrical_zero_count = 0;
 
