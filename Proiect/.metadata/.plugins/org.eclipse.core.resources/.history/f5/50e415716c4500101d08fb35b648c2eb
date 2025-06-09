@@ -1,0 +1,38 @@
+/*
+ * biquad_filter.h
+ *
+ *  Created on: Jun 9, 2025
+ *      Author: Marco
+ */
+
+#ifndef INC_BIQUAD_FILTER_H_
+#define INC_BIQUAD_FILTER_H_
+
+
+typedef enum {
+    BIQUAD_LOWPASS,
+    BIQUAD_HIGHPASS,
+    BIQUAD_BANDPASS,
+    BIQUAD_NOTCH,
+    BIQUAD_PEAK,
+    BIQUAD_LOWSHELF,
+    BIQUAD_HIGHSHELF
+} BiquadType;
+
+typedef struct {
+    float a0, a1, a2, b1, b2;
+    float z1, z2;
+    float Fc, Q, peakGain;
+    BiquadType type;
+} Biquad;
+
+void biquad_init(Biquad *bq);
+void biquad_setFc(Biquad *bq, float Fc);
+float biquad_getFc(const Biquad *bq);
+void biquad_setQ(Biquad *bq, float Q);
+float biquad_getQ(const Biquad *bq);
+void biquad_set(Biquad *bq, BiquadType type, float Fc, float Q, float peakGainDB);
+float biquad_process(Biquad *bq, float in);
+
+
+#endif /* INC_BIQUAD_FILTER_H_ */

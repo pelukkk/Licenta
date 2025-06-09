@@ -1,0 +1,69 @@
+/*
+ * biquad_filter.c
+ *
+ *  Created on: Jun 9, 2025
+ *      Author: Marco
+ */
+
+#define CLIP(x, low, high) ((x) < (low) ? (low) : ((x) > (high) ? (high) : (x)))
+
+void biquad_init(Biquad *bq) {
+    bq->z1 = bq->z2 = 0.0f;
+}
+
+void biquad_setFc(Biquad *bq, float Fc) {
+    bq->Fc = CLIP(Fc, 0.0f, 0.5f);
+}
+
+float biquad_getFc(const Biquad *bq) {
+    return bq->Fc;
+}
+
+void biquad_setQ(Biquad *bq, float Q) {
+    bq->Q = Q;
+}
+
+float biquad_getQ(const Biquad *bq) {
+    return bq->Q;
+}
+
+float biquad_process(Biquad *bq, float in) {
+    float out = in * bq->a0 + bq->z1;
+    bq->z1 = in * bq->a1 + bq->z2 - bq->b1 * out;
+    bq->z2 = in * bq->a2 - bq->b2 * out;
+    return out;
+}
+
+void biquad_set(Biquad *bq, BiquadType type, float Fc, float Q, float peakGainDB) {
+    float norm, V, K;
+    bq->Fc = CLIP(Fc, 0.0f, 0.5f);
+    bq->Q = Q;
+    bq->type = type;
+    bq->peakGain = peakGainDB;
+    bq->z1 = bq->z2 = 0.0f;
+
+    V = powf(10.0f, fabsf(peakGainDB) / 20.0f);
+    K = tanf(M_PI * bq->Fc);
+
+    switch (type) {
+        case BIQUAD_LOWPASS:
+            norm = 1 / (1 + K / Q + K * K);
+            bq->a0 = K * K * norm;
+            bq->a1 = 2 * bq->a0;
+            bq->a2 = bq->a0;
+            bq->b1 = 2 * (K * K - 1) * norm;
+            bq->b2 = (1 - K / Q + K * K) * norm;
+            break;
+        case BIQUAD_HIGHPASS:
+            norm = 1 / (1 + K / Q + K * K);
+            bq->a0 = 1 * norm;
+            bq->a1 = -2 * bq->a0;
+            bq->a2 = bq->a0;
+            bq->b1 = 2 * (K * K - 1) * norm;
+            bq->b2 = (1 - K / Q + K * K) * norm;
+            break;
+        // TODO: Repeat same logic for other filter types
+        default:
+            break;
+    }
+}

@@ -12,7 +12,8 @@
 #include "stm32f4xx_hal.h"
 #include "main.h"
 #include "stm32f4xx_ll_tim.h"
-#include "ffb_defs.h"
+#include "ForceFeedback.h"
+#include "stdbool.h"
 
 void SetupMotor();
 void MotorControl();

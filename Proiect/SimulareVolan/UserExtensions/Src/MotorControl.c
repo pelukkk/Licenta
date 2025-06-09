@@ -15,7 +15,8 @@ extern ADC_HandleTypeDef hadc2;
 
 extern int8_t zeroLearned;
 extern wheelReport reportContainer;
-extern FFB_Effect effects[];
+extern FFB_Effect effects[MAX_EFFECTS];
+extern bool ffb_active;
 
 #define PI_F 3.1415926f
 #define FOC_LOOP_FREQ_HZ 20000.0f
@@ -44,7 +45,7 @@ static int32_t I = 0;
 // FOC state
 static float id = 0, iq = 0;
 static float id_integral = 0, iq_integral = 0;
-static float vd = 0, vq = 0, vq0=0;
+static float vd = 0, vd0 = 0, vq = 0, vq0=0;
 static float valpha = 0, vbeta = 0;
 static float va = 0, vb = 0, vc = 0;
 static float iq_target = 0;
@@ -59,33 +60,45 @@ static float ki = 0.005f;
 void AlignElectricalZero()
 {
     float sin_t = 0.0f;
-    float cos_t = 1.0f;  // d-axis = 0 rad
-
-    // Apply scaled voltage vector
-    float valpha = ALIGN_MAGNITUDE * MAX_VOLTAGE * cos_t;
-    float vbeta  = ALIGN_MAGNITUDE * MAX_VOLTAGE * sin_t;
-
-    float va = valpha;
-    float vb = -0.5f * valpha + sqrtf(3.0f)/2.0f * vbeta;
-    float vc = -0.5f * valpha - sqrtf(3.0f)/2.0f * vbeta;
+    float cos_t = 1.0f;  // d-axis alignment
 
     float period = (float)htim1.Init.Period;
-    float dutyA = (0.5f + 0.5f * va / MAX_VOLTAGE) * period;
-    float dutyB = (0.5f + 0.5f * vb / MAX_VOLTAGE) * period;
-    float dutyC = (0.5f + 0.5f * vc / MAX_VOLTAGE) * period;
+    uint32_t ramp_time_ms = ALIGN_TIME_MS;   // total align time
+    uint32_t step_delay_ms = 5;              // time per step
+    uint32_t steps = ramp_time_ms / step_delay_ms;
 
-    dutyA = CLAMP(dutyA, 0, period);
-    dutyB = CLAMP(dutyB, 0, period);
-    dutyC = CLAMP(dutyC, 0, period);
+    for (uint32_t i = 0; i < steps; i++)
+    {
+        float ramp = (float)i / (float)steps;         // from 0.0 to 1.0
+        float align_mag = ramp * ALIGN_MAGNITUDE;                // final magnitude target
 
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dutyA);
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, dutyC);
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, dutyB);
+        float valpha = align_mag * MAX_VOLTAGE * cos_t;
+        float vbeta  = align_mag * MAX_VOLTAGE * sin_t;
 
-    HAL_Delay(ALIGN_TIME_MS);  // let the motor settle
+        float va = valpha;
+        float vb = -0.5f * valpha + sqrtf(3.0f)/2.0f * vbeta;
+        float vc = -0.5f * valpha - sqrtf(3.0f)/2.0f * vbeta;
+
+        float dutyA = (0.5f + 0.5f * va / MAX_VOLTAGE) * period;
+        float dutyB = (0.5f + 0.5f * vb / MAX_VOLTAGE) * period;
+        float dutyC = (0.5f + 0.5f * vc / MAX_VOLTAGE) * period;
+
+        dutyA = CLAMP(dutyA, 0, period);
+        dutyB = CLAMP(dutyB, 0, period);
+        dutyC = CLAMP(dutyC, 0, period);
+
+        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dutyA);
+        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, dutyC);
+        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, dutyB);
+
+        HAL_Delay(step_delay_ms);
+    }
+
+    HAL_Delay(2000);
 
     electrical_zero_count = (int16_t)__HAL_TIM_GET_COUNTER(&htim3);
 }
+
 
 void SetupMotor()
 {
@@ -155,14 +168,14 @@ void MotorControl(void)
     // --- Targets (iq_target to be set from force feedback) ---
     float id_target = 0.0f;
 
-    iq_target = 100.0f;
+    iq_target = 0.0f;
 
 
     // --- PI Controllers ---
-    vd = PI_Controller(id-id_target, &id_integral, kp, ki, MAX_VOLTAGE);
+    vd0 = PI_Controller(id-id_target, &id_integral, kp, ki, MAX_VOLTAGE);
     vq0 = PI_Controller(iq-iq_target, &iq_integral, kp, ki, MAX_VOLTAGE);
 
-    vd = CLAMP(vd, -1.0f, 1.0f);
+    vd = CLAMP(vd0, -1.0f, 1.0f);
     vq = CLAMP(vq0, -6.0f, 6.0f);
 
 

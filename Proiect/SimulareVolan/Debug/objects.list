@@ -41,3 +41,4 @@
 "./UserExtensions/Src/Pedals.o"
 "./UserExtensions/Src/Shifter.o"
 "./UserExtensions/Src/Wheel.o"
+"./UserExtensions/Src/biquad_filter.o"

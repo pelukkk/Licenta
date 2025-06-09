@@ -10,7 +10,8 @@ C_SRCS += \
 ../UserExtensions/Src/MotorControl.c \
 ../UserExtensions/Src/Pedals.c \
 ../UserExtensions/Src/Shifter.c \
-../UserExtensions/Src/Wheel.c 
+../UserExtensions/Src/Wheel.c \
+../UserExtensions/Src/biquad_filter.c 
 
 C_DEPS += \
 ./UserExtensions/Src/DRV8301.d \
@@ -18,7 +19,8 @@ C_DEPS += \
 ./UserExtensions/Src/MotorControl.d \
 ./UserExtensions/Src/Pedals.d \
 ./UserExtensions/Src/Shifter.d \
-./UserExtensions/Src/Wheel.d 
+./UserExtensions/Src/Wheel.d \
+./UserExtensions/Src/biquad_filter.d 
 
 OBJS += \
 ./UserExtensions/Src/DRV8301.o \
@@ -26,7 +28,8 @@ OBJS += \
 ./UserExtensions/Src/MotorControl.o \
 ./UserExtensions/Src/Pedals.o \
 ./UserExtensions/Src/Shifter.o \
-./UserExtensions/Src/Wheel.o 
+./UserExtensions/Src/Wheel.o \
+./UserExtensions/Src/biquad_filter.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -36,7 +39,7 @@ UserExtensions/Src/%.o UserExtensions/Src/%.su UserExtensions/Src/%.cyclo: ../Us
 clean: clean-UserExtensions-2f-Src
 
 clean-UserExtensions-2f-Src:
-	-$(RM) ./UserExtensions/Src/DRV8301.cyclo ./UserExtensions/Src/DRV8301.d ./UserExtensions/Src/DRV8301.o ./UserExtensions/Src/DRV8301.su ./UserExtensions/Src/ForceFeedback.cyclo ./UserExtensions/Src/ForceFeedback.d ./UserExtensions/Src/ForceFeedback.o ./UserExtensions/Src/ForceFeedback.su ./UserExtensions/Src/MotorControl.cyclo ./UserExtensions/Src/MotorControl.d ./UserExtensions/Src/MotorControl.o ./UserExtensions/Src/MotorControl.su ./UserExtensions/Src/Pedals.cyclo ./UserExtensions/Src/Pedals.d ./UserExtensions/Src/Pedals.o ./UserExtensions/Src/Pedals.su ./UserExtensions/Src/Shifter.cyclo ./UserExtensions/Src/Shifter.d ./UserExtensions/Src/Shifter.o ./UserExtensions/Src/Shifter.su ./UserExtensions/Src/Wheel.cyclo ./UserExtensions/Src/Wheel.d ./UserExtensions/Src/Wheel.o ./UserExtensions/Src/Wheel.su
+	-$(RM) ./UserExtensions/Src/DRV8301.cyclo ./UserExtensions/Src/DRV8301.d ./UserExtensions/Src/DRV8301.o ./UserExtensions/Src/DRV8301.su ./UserExtensions/Src/ForceFeedback.cyclo ./UserExtensions/Src/ForceFeedback.d ./UserExtensions/Src/ForceFeedback.o ./UserExtensions/Src/ForceFeedback.su ./UserExtensions/Src/MotorControl.cyclo ./UserExtensions/Src/MotorControl.d ./UserExtensions/Src/MotorControl.o ./UserExtensions/Src/MotorControl.su ./UserExtensions/Src/Pedals.cyclo ./UserExtensions/Src/Pedals.d ./UserExtensions/Src/Pedals.o ./UserExtensions/Src/Pedals.su ./UserExtensions/Src/Shifter.cyclo ./UserExtensions/Src/Shifter.d ./UserExtensions/Src/Shifter.o ./UserExtensions/Src/Shifter.su ./UserExtensions/Src/Wheel.cyclo ./UserExtensions/Src/Wheel.d ./UserExtensions/Src/Wheel.o ./UserExtensions/Src/Wheel.su ./UserExtensions/Src/biquad_filter.cyclo ./UserExtensions/Src/biquad_filter.d ./UserExtensions/Src/biquad_filter.o ./UserExtensions/Src/biquad_filter.su
 
 .PHONY: clean-UserExtensions-2f-Src
 

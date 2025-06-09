@@ -8,6 +8,22 @@
 #ifndef INC_FFB_DEFS_H_
 #define INC_FFB_DEFS_H_
 
+#define max(a,b)             \
+({                           \
+    __typeof__ (a) _a = (a); \
+    __typeof__ (b) _b = (b); \
+    _a > _b ? _a : _b;       \
+})
+
+#define min(a,b)             \
+({                           \
+    __typeof__ (a) _a = (a); \
+    __typeof__ (b) _b = (b); \
+    _a < _b ? _a : _b;       \
+})
+#define CLAMP(x, lo, hi) ((x) < (lo) ? (lo) : ((x) > (hi) ? (hi) : (x)))
+
+
 #define FFB_ID_OFFSET 0x00
 #define MAX_EFFECTS 40
 
@@ -187,7 +203,7 @@ typedef struct
  	uint16_t positiveSaturation;
  	uint16_t negativeSaturation;
  	uint16_t deadBand;
- } FFB_Effect_Condition;
+ }  __attribute__((packed)) FFB_Effect_Condition;
 
  typedef struct
  {
@@ -220,7 +236,7 @@ typedef struct
  	uint16_t samplePeriod;
  	bool useEnvelope;
  	bool useSingleCondition;
- } FFB_Effect;
+ } __attribute__((packed)) FFB_Effect;
 
  typedef struct
  {
@@ -228,6 +244,5 @@ typedef struct
  	uint8_t effectBlockIndex;
  	int16_t magnitude;
  } __attribute__((packed)) FFB_SetConstantForce_Data_t;
-
 
 #endif /* INC_FFB_DEFS_H_ */

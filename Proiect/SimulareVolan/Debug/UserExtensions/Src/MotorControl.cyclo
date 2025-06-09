@@ -1,4 +1,4 @@
-../UserExtensions/Src/MotorControl.c:59:6:AlignElectricalZero	7
-../UserExtensions/Src/MotorControl.c:90:6:SetupMotor	3
-../UserExtensions/Src/MotorControl.c:129:6:MotorControl	12
-../UserExtensions/Src/MotorControl.c:208:7:PI_Controller	5
+../UserExtensions/Src/MotorControl.c:60:6:AlignElectricalZero	8
+../UserExtensions/Src/MotorControl.c:103:6:SetupMotor	3
+../UserExtensions/Src/MotorControl.c:142:6:MotorControl	12
+../UserExtensions/Src/MotorControl.c:221:7:PI_Controller	5

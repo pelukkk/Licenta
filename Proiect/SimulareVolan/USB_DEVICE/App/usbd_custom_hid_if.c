@@ -35,6 +35,7 @@ USBD_CUSTOM_HID_HandleTypeDef *g_hhid = NULL;
 extern USBD_HandleTypeDef hUsbDeviceFS;
 extern FFB_Effect effects[MAX_EFFECTS];
 extern FFB_BlockLoad_Feature_Data_t blockLoadReport;
+extern FFB_PIDPool_Feature_Data_t poolReport;
 extern int8_t global_gain;
 extern bool ffb_active;
 
@@ -749,7 +750,8 @@ USBD_CUSTOM_HID_ItfTypeDef USBD_CustomHID_fops_FS =
   CUSTOM_HID_ReportDesc_FS,
   CUSTOM_HID_Init_FS,
   CUSTOM_HID_DeInit_FS,
-  CUSTOM_HID_OutEvent_FS
+  CUSTOM_HID_OutEvent_FS,
+  CUSTOM_HID_GetReport
 };
 
 /** @defgroup USBD_CUSTOM_HID_Private_Functions USBD_CUSTOM_HID_Private_Functions
@@ -792,66 +794,51 @@ static int8_t CUSTOM_HID_OutEvent_FS(uint8_t event_idx, uint8_t state)
   /* USER CODE BEGIN 6 */
 	USBD_CUSTOM_HID_HandleTypeDef *hhid = (USBD_CUSTOM_HID_HandleTypeDef *)hUsbDeviceFS.pClassDataCmsit[hUsbDeviceFS.classId];
 	g_hhid = hhid;
-	switch (event_idx)
+	switch (hhid->Report_buf[0])
 	{
 	case HID_ID_NEWEFREP:
-		create_new_effect(state);
-		break;
-
-	case HID_ID_CONSTREP:
-		process_set_constant_force((const FFB_SetConstantForce_Data_t*) hhid->Report_buf);
+		new_effect((const FFB_CreateNewEffect_Feature_Data_t*) hhid->Report_buf);
 		break;
 
 	case HID_ID_EFFREP:
-		process_set_effect((const FFB_SetEffect_t*) hhid->Report_buf);
+		set_effect((const FFB_SetEffect_t*) hhid->Report_buf);
+		break;
+
+	case HID_ID_CTRLREP: // only 2 bytes
+		ffb_control(hhid->Report_buf[1]); // state = command bitmask
+		break;
+
+	case HID_ID_GAINREP: //only 2 bytes
+		set_gain(hhid->Report_buf[1]);
+		break;
+
+	case HID_ID_ENVREP: // Envelope
+		set_envelope((FFB_SetEnvelope_Data_t *) hhid->Report_buf);
 		break;
 
 	case HID_ID_CONDREP:
-		process_set_condition((const FFB_SetCondition_Data_t*) hhid->Report_buf);
+		set_condition((const FFB_SetCondition_Data_t*) hhid->Report_buf);
 		break;
 
-	case HID_ID_CTRLREP:
-		handle_ffb_control(state); // state = command bitmask
+	case HID_ID_PRIDREP: // Periodic
+		set_periodic((FFB_SetPeriodic_Data_t*)hhid->Report_buf);
 		break;
 
-	case HID_ID_GAINREP:
-		set_global_gain(state);
+	case HID_ID_CONSTREP:
+		set_constant_effect((const FFB_SetConstantForce_Data_t*) hhid->Report_buf);
 		break;
 
-	case HID_ID_BLKFRREP:
-		free_effect(state - 1); // state = effect block index
+	case HID_ID_RAMPREP: // Ramp
+		set_ramp((FFB_SetRamp_Data_t *)hhid->Report_buf);
 		break;
 
 	case HID_ID_EFOPREP:
-	{
-		const FFB_EffOp_Data_t* effop = (const FFB_EffOp_Data_t*) hhid->Report_buf;
-		uint8_t id = effop->effectBlockIndex - 1;
-
-		if (id >= MAX_EFFECTS)
-			break;
-
-		switch (effop->state)
-		{
-			case 1: // Start
-				effects[id].state = 1;
-				effects[id].startTime = HAL_GetTick() + effects[id].startDelay;
-				ffb_active = true;
-				break;
-
-			case 2: // Start solo
-				for (int i = 0; i < MAX_EFFECTS; i++) effects[i].state = 0;
-				effects[id].state = 1;
-				effects[id].startTime = HAL_GetTick() + effects[id].startDelay;
-				ffb_active = true;
-				break;
-
-			case 3: // Stop
-				effects[id].state = 0;
-				ffb_active = false;
-				break;
-		}
+		set_effect_operation((FFB_EffOp_Data_t*)hhid->Report_buf);
 		break;
-	}
+
+	case HID_ID_BLKFRREP: // only 2 bytes
+		free_effect(hhid->Report_buf[1] - 1); // state = effect block index
+		break;
 
 	default:
 		break;
@@ -887,29 +874,26 @@ static uint8_t *CUSTOM_HID_GetReport(uint16_t *ReportLength)
 {
 	static uint8_t reportBuffer[64];
 
-	uint8_t report_id = hUsbDeviceFS.request.bRequest == CUSTOM_HID_REQ_GET_REPORT
-	                  ? hUsbDeviceFS.request.wValue & 0xFF
-	                  : 0;
+	uint8_t report_id = hUsbDeviceFS.request.bRequest == CUSTOM_HID_REQ_GET_REPORT ? hUsbDeviceFS.request.wValue & 0xFF : 0;
 
 	switch (report_id)
 	{
-	case HID_ID_BLKLDREP:
-		blockLoadReport.reportId = HID_ID_BLKLDREP;
-		memcpy(reportBuffer, &blockLoadReport, sizeof(FFB_BlockLoad_Feature_Data_t));
-		*ReportLength = sizeof(FFB_BlockLoad_Feature_Data_t);
-		break;
+		case HID_ID_BLKLDREP:
+			blockLoadReport.reportId = HID_ID_BLKLDREP;
+			memcpy(reportBuffer, &blockLoadReport, sizeof(FFB_BlockLoad_Feature_Data_t));
+			*ReportLength = sizeof(FFB_BlockLoad_Feature_Data_t);
+			break;
 
-	case HID_ID_POOLREP:
-	{
-		static FFB_PIDPool_Feature_Data_t poolReport = {
-			.reportId = HID_ID_POOLREP,
-			.ramPoolSize = MAX_EFFECTS * sizeof(FFB_Effect),
-			.maxSimultaneousEffects = MAX_EFFECTS,
-			.memoryManagement = 1
-		};
-		memcpy(reportBuffer, &poolReport, sizeof(poolReport));
-		*ReportLength = sizeof(poolReport);
-		break;
+		case HID_ID_POOLREP:
+		{
+			poolReport.reportId = HID_ID_POOLREP;
+			poolReport.ramPoolSize = MAX_EFFECTS * sizeof(FFB_Effect);
+			poolReport.maxSimultaneousEffects = MAX_EFFECTS;
+			poolReport.memoryManagement = 1;
+
+			memcpy(reportBuffer, &poolReport, sizeof(poolReport));
+			*ReportLength = sizeof(poolReport);
+			break;
 	}
 
 	default:
