@@ -129,6 +129,7 @@ typedef struct
  	uint8_t triggerButton;
  	uint8_t enableAxis;
  	uint16_t directionX;
+ 	uint16_t directionY;
  } __attribute__((packed)) FFB_SetEffect_t;
 
  typedef struct
