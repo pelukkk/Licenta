@@ -712,7 +712,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : Z_MUX_Pin */
   GPIO_InitStruct.Pin = Z_MUX_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(Z_MUX_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : S0_MUX_Pin EN_GATE_Pin */

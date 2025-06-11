@@ -31,14 +31,13 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-USBD_CUSTOM_HID_HandleTypeDef *g_hhid = NULL;
-uint8_t *g_buffer = NULL;
 extern USBD_HandleTypeDef hUsbDeviceFS;
 extern FFB_Effect effects[MAX_EFFECTS];
 extern FFB_BlockLoad_Feature_Data_t blockLoadReport;
 extern FFB_PIDPool_Feature_Data_t poolReport;
 extern int8_t global_gain;
 extern bool ffb_active;
+USBD_CUSTOM_HID_HandleTypeDef *hhid = NULL;
 
 /* USER CODE END PV */
 
@@ -740,7 +739,7 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 
 static int8_t CUSTOM_HID_Init_FS(void);
 static int8_t CUSTOM_HID_DeInit_FS(void);
-static int8_t CUSTOM_HID_OutEvent_FS(uint8_t *buffer);
+static int8_t CUSTOM_HID_OutEvent_FS(uint8_t event_idx, uint8_t state);
 
 /**
   * @}
@@ -790,56 +789,54 @@ static int8_t CUSTOM_HID_DeInit_FS(void)
   * @param  state: Event state
   * @retval USBD_OK if all operations are OK else USBD_FAIL
   */
-static int8_t CUSTOM_HID_OutEvent_FS(uint8_t *buffer)
+static int8_t CUSTOM_HID_OutEvent_FS(uint8_t event_idx, uint8_t state)
 {
   /* USER CODE BEGIN 6 */
-	USBD_CUSTOM_HID_HandleTypeDef *hhid = (USBD_CUSTOM_HID_HandleTypeDef *)hUsbDeviceFS.pClassDataCmsit[hUsbDeviceFS.classId];
-	g_hhid = hhid;
-	g_buffer = buffer;
-	switch (buffer[0])
+	hhid = (USBD_CUSTOM_HID_HandleTypeDef *)hUsbDeviceFS.pClassDataCmsit[hUsbDeviceFS.classId];
+	switch (event_idx)
 	{
 	case HID_ID_NEWEFREP:
-		new_effect((const FFB_CreateNewEffect_Feature_Data_t*) buffer);
+		new_effect((const FFB_CreateNewEffect_Feature_Data_t*) hhid->Report_buf);
 		break;
 
 	case HID_ID_EFFREP:
-		set_effect((const FFB_SetEffect_t*) buffer);
+		set_effect((const FFB_SetEffect_t*) hhid->Report_buf);
 		break;
 
 	case HID_ID_CTRLREP: // only 2 bytes
-		ffb_control(buffer[1]); // state = command bitmask
+		ffb_control(hhid->Report_buf[1]); // state = command bitmask
 		break;
 
 	case HID_ID_GAINREP: //only 2 bytes
-		set_gain(buffer[1]);
+		set_gain(hhid->Report_buf[1]);
 		break;
 
 	case HID_ID_ENVREP: // Envelope
-		set_envelope((FFB_SetEnvelope_Data_t *) buffer);
+		set_envelope((FFB_SetEnvelope_Data_t *) hhid->Report_buf);
 		break;
 
 	case HID_ID_CONDREP:
-		set_condition((const FFB_SetCondition_Data_t*) buffer);
+		set_condition((const FFB_SetCondition_Data_t*) hhid->Report_buf);
 		break;
 
 	case HID_ID_PRIDREP: // Periodic
-		set_periodic((FFB_SetPeriodic_Data_t*) buffer);
+		set_periodic((FFB_SetPeriodic_Data_t*) hhid->Report_buf);
 		break;
 
 	case HID_ID_CONSTREP:
-		set_constant_effect((const FFB_SetConstantForce_Data_t*) buffer);
+		set_constant_effect((const FFB_SetConstantForce_Data_t*) hhid->Report_buf);
 		break;
 
 	case HID_ID_RAMPREP: // Ramp
-		set_ramp((FFB_SetRamp_Data_t *) buffer);
+		set_ramp((FFB_SetRamp_Data_t *) hhid->Report_buf);
 		break;
 
 	case HID_ID_EFOPREP:
-		set_effect_operation((FFB_EffOp_Data_t*) buffer);
+		set_effect_operation((FFB_EffOp_Data_t*) hhid->Report_buf);
 		break;
 
 	case HID_ID_BLKFRREP: // only 2 bytes
-		free_effect(buffer[1] - 1); // state = effect block index
+		free_effect(hhid->Report_buf[1] - 1); // state = effect block index
 		break;
 
 	default:

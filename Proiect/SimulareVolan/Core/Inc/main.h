@@ -106,6 +106,8 @@ void Error_Handler(void);
 #define ENC_B_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
+#define CUSTOM_HID_EPIN_SIZE                         0x40U
+#define CUSTOM_HID_EPOUT_SIZE                        0x40U
 void DisableSPI3_EnableGPIO();
 /* USER CODE END Private defines */
 

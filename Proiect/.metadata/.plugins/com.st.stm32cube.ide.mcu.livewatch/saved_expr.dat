@@ -19,3 +19,5 @@ I
 readValue
 electrical_zero_count
 effects
+(uint8_t [64])*g_buffer
+g_hhid->Report_buf
