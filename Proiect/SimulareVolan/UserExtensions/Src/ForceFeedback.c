@@ -22,34 +22,27 @@ int8_t USBD_CUSTOM_HID_SendReport_FS(uint8_t *report, uint16_t len)
 
 void new_effect(const FFB_CreateNewEffect_Feature_Data_t* effect)
 {
-	uint8_t type = effect->effectType;
-
-	int id = find_free_effect(type);
-	if (id < 0)
+	int id = find_free_effect(effect->effectType);
+	if (id == -1)
 	{
 		blockLoadReport.reportId = HID_ID_BLKLDREP;
+		blockLoadReport.loadStatus = 2; // Load error
 		blockLoadReport.effectBlockIndex = 0;
-		blockLoadReport.loadStatus = 2;
 		blockLoadReport.ramPoolAvailable = 0;
 		return;
 	}
 
-	bool already = (effects[id].state != FFB_EFFECT_NONE);
-
-	if (!already)
-	{
-		memset(&effects[id], 0, sizeof(FFB_Effect));
-		effects[id].type = type;
-		effects[id].gain = 255;
-		effects[id].state = 0;
-	}
+	memset(&effects[id], 0, sizeof(FFB_Effect)); // Clean slate
+	effects[id].type = effect->effectType;
+	effects[id].gain = 255; // default full gain
 
 	blockLoadReport.reportId = HID_ID_BLKLDREP;
 	blockLoadReport.effectBlockIndex = id + 1;
-	blockLoadReport.loadStatus = 1;
+	blockLoadReport.loadStatus = 1; // Success
 	blockLoadReport.ramPoolAvailable = (MAX_EFFECTS - (id + 1)) * sizeof(FFB_Effect);
-}
 
+	send_status_report();
+}
 
 void set_effect(const FFB_SetEffect_t* effect)
 {
@@ -85,20 +78,20 @@ void set_effect(const FFB_SetEffect_t* effect)
 
 void ffb_control(uint8_t command)
 {
-	if (command == 0x01)		// Enable actuators
+	if (command & 0x01)		// Enable actuators
 		ffb_active = true;
-	if (command == 0x02)		// Disable actuators
+	if (command & 0x02)		// Disable actuators
 		ffb_active = false;
-	if (command == 0x04)		// Stop
+	if (command & 0x04)		// Stop
 		ffb_active = false;
-	if (command == 0x08) 	// Reset
+	if (command & 0x08) 	// Reset
 	{
 		ffb_active = false;
 		reset_all_effects();
 	}
-	if (command == 0x10)		// Pause
+	if (command & 0x10)		// Pause
 		ffb_active = false;
-	if (command == 0x20)		// Continue
+	if (command & 0x20)		// Continue
 		ffb_active = true;
 }
 
@@ -208,18 +201,17 @@ void set_effect_operation(FFB_EffOp_Data_t* report)
 
 int find_free_effect(uint8_t type)
 {
-    if (type <= FFB_EFFECT_NONE || type > FFB_EFFECT_CUSTOM)
-        return -1;
-
-    for (int i = 0; i < MAX_EFFECTS; ++i)
-        if (effects[i].type == type && effects[i].state != FFB_EFFECT_NONE)
-            return i;
-
-    for (int i = 0; i < MAX_EFFECTS; ++i)
-        if (effects[i].type == FFB_EFFECT_NONE)
-            return i;
-
-    return -1;
+	if(type > FFB_EFFECT_NONE && type < FFB_EFFECT_CUSTOM+1)
+	{
+		for(uint8_t i=0;i<MAX_EFFECTS;i++)
+		{
+			if(effects[i].type == FFB_EFFECT_NONE)
+			{
+				return(i);
+			}
+		}
+	}
+	return -1;
 }
 
 void reset_all_effects(void)
