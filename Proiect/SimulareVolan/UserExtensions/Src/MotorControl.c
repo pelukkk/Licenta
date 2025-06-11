@@ -169,7 +169,7 @@ void MotorControl(void)
     float id_target = 0.0f;
 
     iq_target = 0.0f;
-
+    if(effects[0].state == 1 && ffb_active == 1) iq_target = (float)(effects[0].magnitude) / 32768 * 1000;
 
     // --- PI Controllers ---
     vd0 = PI_Controller(id-id_target, &id_integral, kp, ki, MAX_VOLTAGE);
