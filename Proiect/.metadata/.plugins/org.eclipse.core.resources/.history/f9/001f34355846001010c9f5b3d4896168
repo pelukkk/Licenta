@@ -108,7 +108,7 @@
 #define HID_DIRECTION_ENABLE 0x04
 #define FFB_EFFECT_DURATION_INFINITE 0xffff
 
-#define MAX_AXIS 2
+#define MAX_AXIS 1
 
 typedef struct
  {
@@ -129,7 +129,6 @@ typedef struct
  	uint8_t triggerButton;
  	uint8_t enableAxis;
  	uint16_t directionX;
- 	uint16_t directionY;
  } __attribute__((packed)) FFB_SetEffect_t;
 
  typedef struct
