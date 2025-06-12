@@ -65,6 +65,13 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim3;
 /* USER CODE BEGIN EV */
 
+extern int16_t pos;
+int16_t oldpos = 0;
+extern int16_t speed;
+int16_t oldspeed = 0;
+extern int16_t accel;
+int16_t indx = 0;
+
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -190,6 +197,21 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
+  indx++;
+
+  if (indx >= 100) // every 100 ms
+  {
+	  speed = (pos - oldpos) * 10; // speed = distance_traveled / time_taken
+	  	  	  	  	  	  	//(10 = 1s / 0.1s)
+
+	  accel = (speed - oldspeed) * 10; // accel = change_in_speed / time_taken
+	  	  	  	  	  	  	  	//(10 = 1s / 0.1s)
+
+	  oldspeed = speed;
+	  oldpos = pos;
+
+	  indx = 0;
+  }
 
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();

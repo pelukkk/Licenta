@@ -29,5 +29,6 @@
  void reset_all_effects(void);
  void free_effect(uint8_t index);
  void send_status_report(void);
+ int16_t calculateWheelForce(float pos, float speed, float accel);
 
 #endif /* USEREXTENSIONS_FORCEFEEDBACK_H_ */

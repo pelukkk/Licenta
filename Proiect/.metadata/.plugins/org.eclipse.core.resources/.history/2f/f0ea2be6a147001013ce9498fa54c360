@@ -1,0 +1,488 @@
+/*
+ * ForceFeedback.c
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+#include "ForceFeedback.h"
+#include "math.h"
+
+#define INTERNAL_SCALER_FRICTION 1.0f
+#define INTERNAL_SCALER_DAMPER 1.0f
+#define INTERNAL_SCALER_INERTIA 1.0f
+
+FFB_Effect effects[MAX_EFFECTS] = {0};
+FFB_BlockLoad_Feature_Data_t blockLoadReport = {0};
+FFB_PIDPool_Feature_Data_t poolReport = {0};
+
+static uint8_t global_gain = 255;
+
+volatile bool ffb_active = false;
+extern USBD_HandleTypeDef hUsbDeviceFS;
+
+int8_t USBD_CUSTOM_HID_SendReport_FS(uint8_t *report, uint16_t len)
+{
+  return USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, report, len);
+}
+
+void new_effect(const FFB_CreateNewEffect_Feature_Data_t* effect)
+{
+	int id = find_free_effect(effect->effectType);
+	if (id == -1)
+	{
+		blockLoadReport.reportId = HID_ID_BLKLDREP;
+		blockLoadReport.loadStatus = 2; // Load error
+		blockLoadReport.effectBlockIndex = 0;
+		blockLoadReport.ramPoolAvailable = 0;
+		return;
+	}
+
+	memset(&effects[id], 0, sizeof(FFB_Effect)); // Clean slate
+	effects[id].type = effect->effectType;
+	effects[id].gain = 255; // default full gain
+
+	blockLoadReport.reportId = HID_ID_BLKLDREP;
+	blockLoadReport.effectBlockIndex = id + 1;
+	blockLoadReport.loadStatus = 1; // Success
+	blockLoadReport.ramPoolAvailable = (MAX_EFFECTS - (id + 1)) * sizeof(FFB_Effect);
+
+	send_status_report();
+}
+
+void set_effect(const FFB_SetEffect_t* effect)
+{
+	if (effect->effectBlockIndex == 0 || effect->effectBlockIndex > MAX_EFFECTS)
+		return;
+
+	uint8_t id = effect->effectBlockIndex - 1;
+
+	FFB_Effect* effect_p = &effects[id];
+
+	effect_p->type = effect->effectType;
+	effect_p->gain = effect->gain;
+	effect_p->duration = effect->duration;
+	effect_p->samplePeriod = effect->samplePeriod;
+	effect_p->startDelay = effect->startDelay;
+	effect_p->offset = 0;
+	effect_p->useEnvelope = false;
+
+	if(effect->duration == 0)
+	{ // Fix for games assuming 0 is infinite
+			effect_p->duration = FFB_EFFECT_DURATION_INFINITE;
+	}
+	else
+	{
+			effect_p->duration = effect->duration;
+	}
+	effect_p->startDelay = effect->startDelay;
+
+	ffb_active = true;
+
+	send_status_report();
+}
+
+void ffb_control(uint8_t command)
+{
+	if (command & 0x01)		// Enable actuators
+		ffb_active = true;
+	if (command & 0x02)		// Disable actuators
+		ffb_active = false;
+	if (command & 0x04)		// Stop
+		ffb_active = false;
+	if (command & 0x08) 	// Reset
+	{
+		ffb_active = false;
+		reset_all_effects();
+	}
+	if (command & 0x10)		// Pause
+		ffb_active = false;
+	if (command & 0x20)		// Continue
+		ffb_active = true;
+}
+
+void set_gain(uint8_t gain)
+{
+	global_gain = gain;
+}
+
+void set_envelope(const FFB_SetEnvelope_Data_t* report)
+{
+	if(report->effectBlockIndex == 0 || report->effectBlockIndex > MAX_EFFECTS)
+	{
+		return;
+	}
+	FFB_Effect *effect = &effects[report->effectBlockIndex - 1];
+
+	effect->attackLevel = report->attackLevel;
+	effect->attackTime = report->attackTime;
+	effect->fadeLevel = report->fadeLevel;
+	effect->fadeTime = report->fadeTime;
+	effect->useEnvelope = true;
+}
+
+void set_condition(const FFB_SetCondition_Data_t* cond)
+{
+	if (cond->effectBlockIndex == 0 || cond->effectBlockIndex > MAX_EFFECTS)
+		return;
+
+	uint8_t id = cond->effectBlockIndex - 1;
+	uint8_t axis = min(MAX_AXIS,cond->parameterBlockOffset);
+
+	FFB_Effect *effect = &effects[id];
+	effect->conditions[axis].cpOffset = cond->cpOffset;
+	effect->conditions[axis].negativeCoefficient = cond->negativeCoefficient;
+	effect->conditions[axis].positiveCoefficient = cond->positiveCoefficient;
+	effect->conditions[axis].negativeSaturation = cond->negativeSaturation;
+	effect->conditions[axis].positiveSaturation = cond->positiveSaturation;
+	effect->conditions[axis].deadBand = cond->deadBand;
+
+	if(effect->conditions[axis].positiveCoefficient != 0 && effect->conditions[axis].positiveSaturation != 0) || (effect->conditions[axis].negativeCoefficient != 0 && effect->conditions[axis].negativeSaturation != 0)
+		|| (axis > 0 && effect->useSingleCondition))  && effect->axisMagnitudes[axis] == 0))
+}
+
+void set_periodic(FFB_SetPeriodic_Data_t* report)
+{
+	if(report->effectBlockIndex == 0 || report->effectBlockIndex > MAX_EFFECTS)
+	{
+		return;
+	}
+	FFB_Effect* effect = &effects[report->effectBlockIndex-1];
+
+	effect->period = CLAMP(report->period,1,0x7fff); // Period is never 0
+	effect->magnitude = report->magnitude;
+	effect->offset = report->offset;
+	effect->phase = report->phase;
+}
+
+void set_constant_effect(const FFB_SetConstantForce_Data_t* report)
+{
+	if (report->effectBlockIndex == 0 || report->effectBlockIndex > MAX_EFFECTS)
+		return;
+
+	uint8_t id = report->effectBlockIndex - 1;
+	effects[id].magnitude = report->magnitude;
+}
+
+void set_ramp(FFB_SetRamp_Data_t* report)
+{
+	if(report->effectBlockIndex == 0 || report->effectBlockIndex > MAX_EFFECTS)
+	{
+		return;
+	}
+
+	FFB_Effect *effect = &effects[report->effectBlockIndex - 1];
+	effect->magnitude = 0x7fff; // Full magnitude for envelope calculation. This effect does not have a periodic report
+	effect->startLevel = report->startLevel;
+	effect->endLevel = report->endLevel;
+}
+
+void set_effect_operation(FFB_EffOp_Data_t* report)
+{
+	if(report->effectBlockIndex == 0 || report->effectBlockIndex > MAX_EFFECTS)
+	{
+		return; // Invalid ID
+	}
+	// Start or stop effect
+	uint8_t id = report->effectBlockIndex-1;
+	if(report->state == 3)
+	{
+		effects[id].state = 0; //Stop
+	}
+	else
+	{
+		// 1 = start, 2 = start solo
+		if(report->state == 2)
+		{
+			for(int i=0; i < MAX_EFFECTS; i++)
+			{
+				effects[i].state = 0; // Stop all other effects
+			}
+		}
+		if(effects[id].state != 1)
+		{
+			//TODO: set_filters(&effects[id]);
+		}
+		effects[id].startTime = HAL_GetTick() + effects[id].startDelay;
+		effects[id].state = 1; //Start
+	}
+}
+
+int find_free_effect(uint8_t type)
+{
+	if(type > FFB_EFFECT_NONE && type < FFB_EFFECT_CUSTOM+1)
+	{
+		for(uint8_t i=0;i<MAX_EFFECTS;i++)
+		{
+			if(effects[i].type == FFB_EFFECT_NONE)
+			{
+				return(i);
+			}
+		}
+	}
+	return -1;
+}
+
+void reset_all_effects(void)
+{
+	memset(effects, 0, sizeof(effects));
+	reportFFB_status_t status =
+	{
+		.reportId = HID_ID_STATE,
+		.status = (HID_ACTUATOR_POWER) | (HID_ENABLE_ACTUATORS)
+	};
+	USBD_CUSTOM_HID_SendReport_FS((uint8_t*)&status, sizeof(reportFFB_status_t));
+}
+
+void free_effect(uint8_t index)
+{
+	if (index >= MAX_EFFECTS)
+		return;
+
+	memset(&effects[index], 0, sizeof(FFB_Effect));
+}
+
+void send_status_report(void)
+{
+    reportFFB_status_t status =
+    {
+        .reportId = HID_ID_STATE,
+        .status = HID_ACTUATOR_POWER | (ffb_active ? HID_ENABLE_ACTUATORS | HID_EFFECT_PLAYING : HID_EFFECT_PAUSE)
+    };
+    USBD_CUSTOM_HID_SendReport_FS((uint8_t*)&status, sizeof(reportFFB_status_t));
+}
+
+int16_t calculateWheelForce(float pos, float speed, float accel)
+{
+    // If FFB is disabled, nothing to do
+    if (!ffb_active)
+    {
+        return 0;
+    }
+
+    uint32_t now = HAL_GetTick();
+    int32_t total = 0;
+
+    for (int i = 0; i < MAX_EFFECTS; i++)
+    {
+        FFB_Effect *e = &effects[i];
+
+        // Skip empty/inactive slots
+        if (e->state == FFB_EFFECT_NONE) continue;
+
+        // Handle start-delay
+        if (now < e->startTime) continue;
+
+        // Handle expiration (unless infinite)
+        if (e->duration != FFB_EFFECT_DURATION_INFINITE && e->duration != 0)
+        {
+            if (now - e->startTime > e->duration)
+            {
+                e->state = FFB_EFFECT_NONE;
+                continue;
+            }
+        }
+
+
+        // 1) Compute “base” force vector fv
+
+        int32_t fv = 0;
+
+        // --- envelope modulation ---
+        int32_t mag = e->magnitude;
+        if (e->useEnvelope && e->duration != FFB_EFFECT_DURATION_INFINITE && e->duration != 0)
+        {
+            uint32_t dt = now - e->startTime;
+            int32_t base = ABS(e->magnitude);
+            int32_t env = base;
+
+            // attack
+            if (e->attackTime && dt < e->attackTime)
+            {
+                env = (base - e->attackLevel) * (int32_t)dt / (int32_t)e->attackTime + e->attackLevel;
+            }
+            // fade
+            if (e->fadeTime && dt > (e->duration - e->fadeTime))
+            {
+                uint32_t rem = e->duration - dt;
+                env = (env - e->fadeLevel) * (int32_t)rem / (int32_t)e->fadeTime + e->fadeLevel;
+            }
+            mag = (e->magnitude < 0 ? -env : env);
+        }
+
+        switch (e->type)
+        {
+        case FFB_EFFECT_CONSTANT:
+            fv = mag;
+            break;
+
+        case FFB_EFFECT_RAMP:
+        {
+            uint32_t dt = now - e->startTime;
+            fv = e->startLevel + (int32_t)dt * (e->endLevel - e->startLevel) / (int32_t)e->duration;
+            break;
+        }
+
+        case FFB_EFFECT_SQUARE:
+        {
+            uint32_t dt = now - e->startTime;
+            uint32_t p  = (uint32_t)e->period + 2;
+            fv = ((dt + e->phase) % p) < (p/2) ? -mag : mag;
+            fv += e->offset;
+            break;
+        }
+
+        case FFB_EFFECT_TRIANGLE:
+        {
+            uint32_t dt = now - e->startTime;
+            float P    = (float)e->period;
+            int32_t maxM = e->offset + mag, minM = e->offset - mag;
+            uint32_t ph  = (e->phase * e->period) / 35999;
+            float r      = fmodf((float)(dt + ph), P);
+            float slope  = ((maxM - minM)*2.0f)/P;
+            fv = (r > P/2 ? slope*(P-r) : slope*r) + minM;
+            break;
+        }
+
+        case FFB_EFFECT_SAWTOOTHUP:
+        {
+            uint32_t dt = now - e->startTime;
+            float P    = (float)e->period;
+            float maxM = e->offset + mag, minM = e->offset - mag;
+            uint32_t ph  = (e->phase * e->period) / 35999;
+            float r      = fmodf((float)(dt + ph), P);
+            float slope  = (maxM - minM)/P;
+            fv = (int32_t)(minM + slope*(P-r));
+            break;
+        }
+
+        case FFB_EFFECT_SAWTOOTHDOWN:
+        {
+            uint32_t dt = now - e->startTime;
+            float P    = (float)e->period;
+            float maxM = e->offset + mag, minM = e->offset - mag;
+            uint32_t ph  = (e->phase * e->period) / 35999;
+            float r      = fmodf((float)(dt + ph), P);
+            float slope  = (maxM - minM)/P;
+            fv = (int32_t)(minM + slope * r);
+            break;
+        }
+
+        case FFB_EFFECT_SINE:
+        {
+            float t    = (float)(now - e->startTime);
+            float freq = 1.0f / (float)((e->period < 2) ? 2 : e->period);
+            float ph   = (float)e->phase / 35999.0f;
+            fv = (int32_t)(e->offset + sinf(2.0f * PI_F * (t*freq + ph)) * (float)mag);
+            break;
+        }
+
+        default:
+            // conditional effects handled below
+            break;
+        }
+
+        //
+        // 2) Turn fv (the base vector) into our single-axis comp,
+        //    or compute a conditional force directly
+        //
+        int32_t comp = 0;
+        uint8_t ci = e->useSingleCondition ? 0 : 0;  // always axis 0
+
+        switch (e->type)
+        {
+        // non-conditional types
+        case FFB_EFFECT_CONSTANT:
+        case FFB_EFFECT_RAMP:
+        case FFB_EFFECT_SQUARE:
+        case FFB_EFFECT_TRIANGLE:
+        case FFB_EFFECT_SAWTOOTHUP:
+        case FFB_EFFECT_SAWTOOTHDOWN:
+        case FFB_EFFECT_SINE:
+            comp = fv;
+            break;
+
+        // spring uses position
+        case FFB_EFFECT_SPRING:
+        {
+            // conditional core
+            const FFB_Effect_Condition *c = &e->conditions[ci];
+            float delta = pos - (float)c->cpOffset;
+            if (ABS(delta) > (float)c->deadBand)
+            {
+                float coeff = (delta>0 ? c->positiveCoefficient : c->negativeCoefficient) / 32767.0f;
+                float gainf = ((float)e->gain + 1.0f) / 256.0f;
+                float m = delta - (float)c->deadBand * ((delta<0)?-1.0f:1.0f);
+                int32_t f = (int32_t)(coeff*gainf*1.0f*m);
+                f = CLAMP(f, - (int32_t)c->negativeSaturation, (int32_t)c->positiveSaturation);
+                comp = - f * e->axisMagnitudes[0];
+            }
+            break;
+        }
+
+        // friction uses speed
+        case FFB_EFFECT_FRICTION:
+        {
+            const FFB_Effect_Condition *c = &e->conditions[ci];
+            float metric = speed * INTERNAL_SCALER_FRICTION;
+            float delta  = metric - (float)c->cpOffset;
+            if (ABS(delta) > (float)c->deadBand)
+            {
+                float coeff = (delta>0 ? c->positiveCoefficient : c->negativeCoefficient) / 32767.0f;
+                float gainf = ((float)e->gain + 1.0f) / 256.0f;
+                float m    = delta - (float)c->deadBand * ((delta<0)?-1.0f:1.0f);
+                int32_t f = (int32_t)(coeff*gainf*1.0f*m);
+                f = CLAMP(f, - (int32_t)c->negativeSaturation, (int32_t)c->positiveSaturation);
+                comp = - f * e->axisMagnitudes[0];
+            }
+            break;
+        }
+
+        // damper uses speed
+        case FFB_EFFECT_DAMPER:
+        {
+            const FFB_Effect_Condition *c = &e->conditions[ci];
+            float metric = speed * INTERNAL_SCALER_DAMPER;
+            float delta  = metric - (float)c->cpOffset;
+            if (ABS(delta) > (float)c->deadBand)
+            {
+                float coeff = (delta>0 ? c->positiveCoefficient : c->negativeCoefficient) / 32767.0f;
+                float gainf = ((float)e->gain + 1.0f) / 256.0f;
+                float m = delta - (float)c->deadBand * ((delta<0)?-1.0f:1.0f);
+                int32_t f = (int32_t)(coeff*gainf*1.0f*m);
+                f = CLAMP(f, - (int32_t)c->negativeSaturation, (int32_t)c->positiveSaturation);
+                comp = - f * e->axisMagnitudes[0];
+            }
+            break;
+        }
+
+        // inertia uses accel
+        case FFB_EFFECT_INERTIA:
+        {
+            const FFB_Effect_Condition *c = &e->conditions[ci];
+            float metric = accel * INTERNAL_SCALER_INERTIA;
+            float delta  = metric - (float)c->cpOffset;
+            if (ABS(delta) > (float)c->deadBand)
+            {
+                float coeff = (delta>0 ? c->positiveCoefficient : c->negativeCoefficient) / 32767.0f;
+                float gainf = ((float)e->gain + 1.0f) / 256.0f;
+                float m    = delta - (float)c->deadBand * ((delta<0)?-1.0f:1.0f);
+                int32_t f = (int32_t)(coeff*gainf*1.0f*m);
+                f = CLAMP(f, - (int32_t)c->negativeSaturation, (int32_t)c->positiveSaturation);
+                comp = - f * e->axisMagnitudes[0];
+            }
+            break;
+        }
+
+        default:
+            comp = 0;
+        }
+
+        total += comp;
+    }
+
+    // global gain and final clamp
+    total = ((total * global_gain) / 255) /100; // /100 for savety reasons
+    total = CLAMP(total, -0x7FFF, 0x7FFF);
+
+    return (int16_t)total;
+}

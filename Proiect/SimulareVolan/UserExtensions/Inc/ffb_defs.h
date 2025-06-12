@@ -23,6 +23,9 @@
 })
 #define CLAMP(x, lo, hi) ((x) < (lo) ? (lo) : ((x) > (hi) ? (hi) : (x)))
 
+#define ABS(x) ((x)<0?-(x):(x))
+#define PI_F 3.1415926f
+
 
 #define FFB_ID_OFFSET 0x00
 #define MAX_EFFECTS 40

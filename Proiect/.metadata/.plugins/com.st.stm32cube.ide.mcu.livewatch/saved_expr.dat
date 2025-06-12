@@ -19,5 +19,12 @@ I
 readValue
 electrical_zero_count
 effects
-(uint8_t [64])*g_buffer
-g_hhid->Report_buf
+hhid->Report_buf
+tickFreq
+ph
+speed
+accel
+pos
+oldpos
+effects[0].magnitude
+global_gain
