@@ -9,7 +9,7 @@
 
 #define INTERNAL_SCALER_FRICTION 1.0f
 #define INTERNAL_SCALER_DAMPER 1.0f
-#define INTERNAL_SCALER_INERTIA 1.0f
+#define INTERNAL_SCALER_INERTIA 0.1f
 
 FFB_Effect effects[MAX_EFFECTS] = {0};
 FFB_BlockLoad_Feature_Data_t blockLoadReport = {0};

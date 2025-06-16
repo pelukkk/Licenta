@@ -28,3 +28,4 @@ pos
 oldpos
 effects[0].magnitude
 global_gain
+adc3_buffer

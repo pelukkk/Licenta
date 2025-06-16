@@ -19,12 +19,10 @@ extern FFB_Effect effects[MAX_EFFECTS];
 extern bool ffb_active;
 
 #define FOC_LOOP_FREQ_HZ 20000.0f
-#define MAX_CURRENT_ADC 200.0f
 #define MAX_VOLTAGE     12.0f
 #define CLAMP(x, lo, hi) ((x) < (lo) ? (lo) : ((x) > (hi) ? (hi) : (x)))
 #define ENC_COUNTS_PER_REV (4096 * 4)
 #define POLE_PAIRS 15
-#define MAX_TORQUE_CURRENT 0.5f
 
 #define ALIGN_MAGNITUDE 0.3f
 #define ALIGN_TIME_MS 2000  // time to hold the rotor in place
@@ -59,7 +57,7 @@ static float ph = 0;
 int16_t force = 0;
 
 static float kp = 0.001f;
-static float ki = 0.0005f;
+static float ki = 0.0002f;
 
 
 void AlignElectricalZero()
@@ -208,11 +206,6 @@ void MotorControl(void)
 
     // --- Basic overcurrent protection ---
     I = sqrtf(Ib * Ib + Ic * Ic + Ia * Ia);
-    if (I > MAX_CURRENT_ADC) {
-        dutyA *= 0.9f;
-        dutyB *= 0.9f;
-        dutyC *= 0.9f;
-    }
 
     // --- Apply PWM ---
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, dutyA);
@@ -229,15 +222,6 @@ float PI_Controller(float error, float* integral, float kp, float ki, float limi
 {
     *integral += ki * error;
     float output = kp * error + *integral;
-
-    // Clamp output and anti-windup
-    if (output > limit) {
-        output = limit;
-        if (*integral > limit) *integral = limit;
-    } else if (output < -limit) {
-        output = -limit;
-        if (*integral < -limit) *integral = -limit;
-    }
 
     return output;
 }

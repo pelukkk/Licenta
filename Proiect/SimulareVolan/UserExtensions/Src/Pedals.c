@@ -11,6 +11,8 @@ extern wheelReport reportContainer;
 
 extern uint16_t adc3_buffer[3];
 
+extern ADC_HandleTypeDef hadc3;
+
 uint16_t clutchBuffer[FILTER_SIZE] = {0};
 uint8_t clutchIndex = 0;
 volatile uint16_t rawClutch = 0;
@@ -41,6 +43,9 @@ uint16_t FilterADC(uint16_t *buffer, uint8_t *index, uint16_t newSample)
 
 void UpdatePedals()
 {
+	adc3_buffer[0] = HAL_ADCEx_InjectedGetValue(&hadc3, ADC_INJECTED_RANK_1);
+	adc3_buffer[1] = HAL_ADCEx_InjectedGetValue(&hadc3, ADC_INJECTED_RANK_2);
+	adc3_buffer[2] = HAL_ADCEx_InjectedGetValue(&hadc3, ADC_INJECTED_RANK_3);
 
     rawClutch   = 5000 - adc3_buffer[0];  // ADC3_IN0
     rawBrake    = 5000 - adc3_buffer[1];  // ADC3_IN1
