@@ -501,7 +501,7 @@ int16_t calculateWheelForce(float pos, float speed, float accel)
 
     // global gain and final clamp
     total = ((total * global_gain) / 255);
-    total = CLAMP(total, -0x7FFF, 0x7FFF);
+    total = CLAMP(total, -0x7FFF, 0x7FFF) / 32;
 
     return (int16_t)total;
 }

@@ -8,11 +8,16 @@
 #include "DRV8301.h"
 
 extern SPI_HandleTypeDef hspi3;
+extern uint16_t drv_ctrl1;
 extern uint16_t drv_ctrl2;
 
 void SetupDRV8301()
 {
 	drv8301_init();
+
+	drv8301_write_reg(DRV8301_REG_CTRL1, 0x0010 );
+	drv8301_read_reg(DRV8301_REG_CTRL1, &drv_ctrl1 );
+
 	drv8301_write_reg(DRV8301_REG_CTRL2, 0x000C );
 	drv8301_read_reg(DRV8301_REG_CTRL2, &drv_ctrl2 );
 }

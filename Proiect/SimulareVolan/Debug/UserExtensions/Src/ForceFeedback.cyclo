@@ -13,4 +13,4 @@
 ../UserExtensions/Src/ForceFeedback.c:244:6:reset_all_effects	1
 ../UserExtensions/Src/ForceFeedback.c:255:6:free_effect	2
 ../UserExtensions/Src/ForceFeedback.c:263:6:send_status_report	2
-../UserExtensions/Src/ForceFeedback.c:273:9:calculateWheelForce	52
+../UserExtensions/Src/ForceFeedback.c:273:9:calculateWheelForce	53

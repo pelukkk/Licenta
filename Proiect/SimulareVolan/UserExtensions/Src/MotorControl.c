@@ -58,8 +58,8 @@ static float ph = 0;
 
 int16_t force = 0;
 
-static float kp = 0.01f;
-static float ki = 0.005f;
+static float kp = 0.001f;
+static float ki = 0.0005f;
 
 
 void AlignElectricalZero()

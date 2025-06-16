@@ -65,6 +65,7 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 
 uint16_t adc3_buffer[3];
 
+uint16_t drv_ctrl1 = 0;
 uint16_t drv_ctrl2 = 0;
 
 /* USER CODE END PV */
