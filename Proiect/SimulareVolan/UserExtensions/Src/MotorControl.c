@@ -18,13 +18,12 @@ extern wheelReport reportContainer;
 extern FFB_Effect effects[MAX_EFFECTS];
 extern bool ffb_active;
 
-#define FOC_LOOP_FREQ_HZ 20000.0f
 #define MAX_VOLTAGE     12.0f
 #define CLAMP(x, lo, hi) ((x) < (lo) ? (lo) : ((x) > (hi) ? (hi) : (x)))
 #define ENC_COUNTS_PER_REV (4096 * 4)
 #define POLE_PAIRS 15
 
-#define ALIGN_MAGNITUDE 0.3f
+#define ALIGN_MAGNITUDE 0.2f
 #define ALIGN_TIME_MS 2000  // time to hold the rotor in place
 
 // Motor speed and acceleration variables
@@ -144,6 +143,7 @@ void SetupMotor()
 
 void MotorControl(void)
 {
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
     // --- Current sensing ---
 	Ib_adc = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
 	Ic_adc = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
@@ -174,6 +174,14 @@ void MotorControl(void)
     //iq_target = 0.0f;
 
     float iq_target0 = calculateWheelForce(pos, speed, accel);
+
+    float dx = max(0, abs(pos) - 20480);
+
+    if(dx > 1) iq_target0 = 5*dx*(pos<0 ? -1 : 1);
+
+    //if(pos < -20480) iq_target0 = (pos + 20480);
+    //else if (pos > 20480) iq_target0 = (pos - 20480);
+
     iq_target = CLAMP(iq_target0, -300, 300);
 
     // --- PI Controllers ---
@@ -214,8 +222,10 @@ void MotorControl(void)
 
     // --- Optional reporting ---
     reportContainer.Z = I;
-    reportContainer.Dial = Ib;
+    reportContainer.Dial = id*vd + iq*vq;
     reportContainer.Slider = Ic;
+
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
 }
 
 float PI_Controller(float error, float* integral, float kp, float ki, float limit)
