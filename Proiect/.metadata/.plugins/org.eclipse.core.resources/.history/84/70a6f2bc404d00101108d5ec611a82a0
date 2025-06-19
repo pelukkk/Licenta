@@ -128,9 +128,9 @@ int main(void)
   MX_SPI3_Init();
   /* USER CODE BEGIN 2 */
 
-	HAL_ADCEx_InjectedStart_IT(&hadc1);  // Enables ADC1_IN6 and ADC1_IN10 injected convs
-	HAL_ADCEx_InjectedStart_IT(&hadc2);  // Enables ADC2 injected convs
-	HAL_ADCEx_InjectedStart_IT(&hadc3);  // Enables ADC3_IN1, ADC3_IN2, ADC3_IN3 injected convs
+	HAL_ADCEx_InjectedStart_IT(&hadc1);  // Triggers ADC1_IN06 and ADC1_IN10 injected convs
+	HAL_ADCEx_InjectedStart_IT(&hadc2);  // Triggers ADC2 injected convs
+	HAL_ADCEx_InjectedStart_IT(&hadc3);  // Triggers ADC3 3 channels injected convs
 
 	reportContainer.id = 0x01;
 	reportContainer.buttons = 0;

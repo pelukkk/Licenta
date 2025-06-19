@@ -18,8 +18,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if(GPIO_Pin == ENC_Z_Pin)
 	{
-		__HAL_TIM_SET_COUNTER(&htim3, 0); // Reset timer counter to 0
-		EXTI->IMR &= ~(1 << 9);  // Deactivate interrupt request only on line 9
+		__HAL_TIM_SET_COUNTER(&htim3, 0); // Resetam timer-ul la 0
+		EXTI->IMR &= ~(1 << 9);  // Dezactivam intreruperea doar pe linia 9
 		zeroLearned = 1;
 	}
 }
@@ -32,6 +32,5 @@ void StartEncoder()
 void UpdateWheel()
 {
 	readValue = __HAL_TIM_GET_COUNTER(&htim3);
-	if(readValue < -20480 || readValue > 20480) return;
 	reportContainer.X = readValue;
 }

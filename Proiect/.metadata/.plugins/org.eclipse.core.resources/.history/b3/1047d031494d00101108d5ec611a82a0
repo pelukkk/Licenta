@@ -179,6 +179,9 @@ void MotorControl(void)
 
     if(dx > 1 && ffb_active) iq_target0 = 5*dx*(pos<0 ? -1 : 1);
 
+    //if(pos < -20480) iq_target0 = (pos + 20480);
+    //else if (pos > 20480) iq_target0 = (pos - 20480);
+
     iq_target = CLAMP(iq_target0, -300, 300);
 
     // --- PI Controllers ---
@@ -220,7 +223,7 @@ void MotorControl(void)
     // --- Optional reporting ---
     reportContainer.Z = I;
     reportContainer.Dial = id*vd + iq*vq;
-    reportContainer.Slider = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // VBUS sensing
+    reportContainer.Slider = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2);;
 
     //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
 }
