@@ -1,0 +1,61 @@
+/*
+ * Shifter.c
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+
+#include "Shifter.h"
+
+extern wheelReport reportContainer;
+int inGear = 0;
+int inGearCurrent = 0;
+
+void select_mux_channel(uint8_t channel)
+{
+    HAL_GPIO_WritePin(S0_MUX_GPIO_Port, S0_MUX_Pin, (channel & 0x01) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(S1_MUX_GPIO_Port, S1_MUX_Pin, (channel & 0x02) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(S2_MUX_GPIO_Port, S2_MUX_Pin, (channel & 0x04) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+}
+
+GPIO_PinState read_mux_output(void)
+{
+    return HAL_GPIO_ReadPin(Z_MUX_GPIO_Port, Z_MUX_Pin);
+}
+
+void UpdateShifter()
+{
+	inGearCurrent = 0;
+
+	for (uint8_t i = 7; i >= 0; i--)
+	{
+		select_mux_channel(i);
+		if (read_mux_output())
+		{
+			inGearCurrent = 1;
+
+			if (!inGear)
+			{
+				inGear = 1;
+				switch(i)
+				{
+					case 0: reportContainer.buttons = 0x00000001; break;
+					case 1: reportContainer.buttons = 0x00000002; break;
+					case 2: reportContainer.buttons = 0x00000004; break;
+					case 3: reportContainer.buttons = 0x00000008; break;
+					case 4: reportContainer.buttons = 0x00000010; break;
+					case 5: reportContainer.buttons = 0x00000020; break;
+					case 6: reportContainer.buttons = 0x00000040; break;
+					case 7: reportContainer.buttons = 0x00000080; break;
+					//default: reportContainer.buttons = 0;
+				}
+			}
+		}
+	}
+
+	if (!inGearCurrent)
+	{
+		reportContainer.buttons = 0;
+		inGear = 0;
+	}
+}

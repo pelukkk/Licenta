@@ -1,4 +1,4 @@
-16:39:34 **** Incremental Build of configuration Debug for project Test_MUX ****
+17:35:20 **** Incremental Build of configuration Debug for project Test_MUX ****
 make -j16 all 
 arm-none-eabi-size  Test_MUX.elf 
    text	   data	    bss	    dec	    hex	filename
@@ -6,5 +6,5 @@ arm-none-eabi-size  Test_MUX.elf
 Finished building: default.size.stdout
  
 
-16:39:35 Build Finished. 0 errors, 0 warnings. (took 329ms)
+17:35:21 Build Finished. 0 errors, 0 warnings. (took 187ms)
 

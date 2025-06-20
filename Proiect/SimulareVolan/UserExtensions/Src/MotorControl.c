@@ -34,6 +34,12 @@ int16_t pos = 0;
 
 static int16_t electrical_zero_count = 0;
 
+// VBUS_S value
+static float vbus_s = 0.0f;
+
+// Power draw
+static float power = 0;
+
 // Persistent offsets for ADC baseline calibration
 static int32_t Ib_adc0 = 0;
 static int32_t Ic_adc0 = 0;
@@ -148,6 +154,9 @@ void MotorControl(void)
 	Ib_adc = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
 	Ic_adc = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
 
+	// --- Voltage sensing ---
+	vbus_s = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2)*0.015f; // VBUS sensing
+
     Ib = Ib_adc - Ib_adc0;
     Ic = Ic_adc - Ic_adc0;
     Ia = -(Ib + Ic);
@@ -179,13 +188,13 @@ void MotorControl(void)
 
     if(dx > 1 && ffb_active) iq_target0 = 5*dx*(pos<0 ? -1 : 1);
 
-    iq_target = CLAMP(iq_target0, -300, 300);
+    iq_target = CLAMP(iq_target0, -500, 500);
 
     // --- PI Controllers ---
     vd0 = PI_Controller(id-id_target, &id_integral, kp, ki, MAX_VOLTAGE);
     vq0 = PI_Controller(iq-iq_target, &iq_integral, kp, ki, MAX_VOLTAGE);
 
-    vd = CLAMP(vd0, -1.0f, 1.0f);
+    vd = CLAMP(vd0, -1.5f, 1.5f);
     vq = CLAMP(vq0, -6.0f, 6.0f);
 
 
@@ -217,10 +226,15 @@ void MotorControl(void)
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, dutyC);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, dutyB);
 
+    // --- Power draw
+
+    power = id*vd + iq*vq;
+
+
     // --- Optional reporting ---
-    reportContainer.Z = I;
+    //reportContainer.Z = I;
     reportContainer.Dial = id*vd + iq*vq;
-    reportContainer.Slider = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // VBUS sensing
+    reportContainer.Slider = vbus_s;
 
     //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
 }

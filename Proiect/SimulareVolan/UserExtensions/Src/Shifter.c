@@ -27,9 +27,10 @@ void UpdateShifter()
 {
 	inGearCurrent = 0;
 
-	for (uint8_t i = 0; i < 8; ++i)
+	for (int8_t i = 0; i < 8; i++)
 	{
 		select_mux_channel(i);
+		for(int j=0; j<5;j++);
 		if (read_mux_output())
 		{
 			inGearCurrent = 1;
@@ -39,15 +40,15 @@ void UpdateShifter()
 				inGear = 1;
 				switch(i)
 				{
-					case 4: reportContainer.buttons = 0x00000001; break;
+					case 0: reportContainer.buttons = 0x00000001; break;
 					case 1: reportContainer.buttons = 0x00000002; break;
 					case 2: reportContainer.buttons = 0x00000004; break;
 					case 3: reportContainer.buttons = 0x00000008; break;
-					case 0: reportContainer.buttons = 0x00000010; break;
+					case 4: reportContainer.buttons = 0x00000010; break;
 					case 5: reportContainer.buttons = 0x00000020; break;
 					case 6: reportContainer.buttons = 0x00000040; break;
 					case 7: reportContainer.buttons = 0x00000080; break;
-					default: reportContainer.buttons = 0;
+					//default: reportContainer.buttons = 0;
 				}
 			}
 		}

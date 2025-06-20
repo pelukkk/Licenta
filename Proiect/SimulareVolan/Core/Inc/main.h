@@ -83,6 +83,10 @@ void Error_Handler(void);
 #define Z_MUX_GPIO_Port GPIOA
 #define S0_MUX_Pin GPIO_PIN_2
 #define S0_MUX_GPIO_Port GPIOB
+#define AUX_L_Pin GPIO_PIN_10
+#define AUX_L_GPIO_Port GPIOB
+#define AUX_H_Pin GPIO_PIN_11
+#define AUX_H_GPIO_Port GPIOB
 #define EN_GATE_Pin GPIO_PIN_12
 #define EN_GATE_GPIO_Port GPIOB
 #define M0_AL_Pin GPIO_PIN_13

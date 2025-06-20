@@ -107,7 +107,7 @@ int main(void)
 				  HAL_GPIO_WritePin(GPIOA, S1_Pin, j);
 				  HAL_GPIO_WritePin(GPIOA, S2_Pin, k);
 
-				  HAL_Delay(1000);
+				  HAL_Delay(10);
 
 				  HAL_ADC_Start(&hadc1); // start the ADC
 
@@ -117,6 +117,7 @@ int main(void)
 
 				  HAL_ADC_Stop(&hadc1);
 			  }
+	  int final = 1;
 }
     /* USER CODE END WHILE */
 
