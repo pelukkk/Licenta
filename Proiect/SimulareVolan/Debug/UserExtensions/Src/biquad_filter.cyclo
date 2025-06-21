@@ -1,7 +1,0 @@
-../UserExtensions/Src/biquad_filter.c:12:6:biquad_init	1
-../UserExtensions/Src/biquad_filter.c:16:6:biquad_setFc	3
-../UserExtensions/Src/biquad_filter.c:20:7:biquad_getFc	1
-../UserExtensions/Src/biquad_filter.c:24:6:biquad_setQ	1
-../UserExtensions/Src/biquad_filter.c:28:7:biquad_getQ	1
-../UserExtensions/Src/biquad_filter.c:32:7:biquad_process	1
-../UserExtensions/Src/biquad_filter.c:39:6:biquad_set	5

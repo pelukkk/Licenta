@@ -35,6 +35,6 @@ void StartEncoder()
 void UpdateWheel()
 {
 	readValue = __HAL_TIM_GET_COUNTER(&htim3);
-	if(readValue < -enc_max_value || readValue > enc_max_value) return;
+	if(readValue < -20480 || readValue > 20480) return;
 	reportContainer.X = readValue;
 }

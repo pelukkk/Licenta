@@ -7,15 +7,12 @@
 
 #include <Wheel.h>
 
-#define WHEEL_DEGREES 900
-
 extern TIM_HandleTypeDef htim3;
 
 extern wheelReport reportContainer;
 
 volatile int8_t zeroLearned = 0;
 volatile int16_t readValue = 0;
-static int16_t enc_max_value = (float)WHEEL_DEGREES*22.75f;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
@@ -35,6 +32,6 @@ void StartEncoder()
 void UpdateWheel()
 {
 	readValue = __HAL_TIM_GET_COUNTER(&htim3);
-	if(readValue < -enc_max_value || readValue > enc_max_value) return;
+	if(readValue < -20480 || readValue > 20480) return;
 	reportContainer.X = readValue;
 }

@@ -15,7 +15,7 @@ extern wheelReport reportContainer;
 
 volatile int8_t zeroLearned = 0;
 volatile int16_t readValue = 0;
-static int16_t enc_max_value = (float)WHEEL_DEGREES*22.75f;
+static int16_t enc_max_value = (float)WHEEL_DEGREES*22.76f;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
