@@ -1,0 +1,34 @@
+/*
+ * ForceFeedback.h
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+
+#ifndef USEREXTENSIONS_FORCEFEEDBACK_H_
+#define USEREXTENSIONS_FORCEFEEDBACK_H_
+
+#include "usbd_customhid.h"
+#include <stdbool.h>
+#include "ffb_defs.h"
+
+ int8_t USBD_CUSTOM_HID_SendReport_FS(uint8_t *report, uint16_t len);
+
+ void new_effect(const FFB_CreateNewEffect_Feature_Data_t* effect);
+ void set_effect(const FFB_SetEffect_t* report);
+ void ffb_control(uint8_t command);
+ void set_gain(uint8_t gain);
+ void set_envelope(const FFB_SetEnvelope_Data_t* report);
+ void set_condition(const FFB_SetCondition_Data_t* report);
+ void set_periodic(FFB_SetPeriodic_Data_t* report);
+ void set_constant_effect(const FFB_SetConstantForce_Data_t* report);
+ void set_ramp(FFB_SetRamp_Data_t* report);
+ void set_effect_operation(FFB_EffOp_Data_t* report);
+
+ int find_free_effect(uint8_t type);
+ void reset_all_effects(void);
+ void free_effect(uint8_t index);
+ void send_status_report(void);
+ int16_t calculateWheelForce(float pos, float speed, float accel);
+
+#endif /* USEREXTENSIONS_FORCEFEEDBACK_H_ */

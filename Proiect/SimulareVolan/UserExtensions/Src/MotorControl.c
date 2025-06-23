@@ -39,6 +39,7 @@ static float vbus_s = 0.0f;
 
 // Power draw
 static float power = 0;
+static float maxpower = 0;
 
 // Persistent offsets for ADC baseline calibration
 static int32_t Ib_adc0 = 0;
@@ -63,7 +64,7 @@ int16_t force = 0;
 
 #define ADC_TO_AMP (0.0165f)
 static float kp = 0.001f;
-static float ki = 0.0002f;
+static float ki = 0.00005f;
 
 
 void AlignElectricalZero()
@@ -232,6 +233,7 @@ void MotorControl(void)
     // --- Power draw
 
     power = Ia*va+Ib*vc+Ic*vb;
+    if(maxpower<power)maxpower=power;
 
 
     // --- Optional reporting ---
