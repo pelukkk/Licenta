@@ -47,8 +47,8 @@ static int32_t Ic_adc0 = 0;
 // Phase currents
 static int16_t Ib_adc = 0;
 static int16_t Ic_adc = 0;
-static int32_t Ib = 0, Ic = 0, Ia = 0;
-static int32_t I = 0;
+static float Ib = 0, Ic = 0, Ia = 0;
+static float I = 0;
 
 // FOC state
 static float id = 0, iq = 0;
@@ -61,6 +61,7 @@ static float ph = 0;
 
 int16_t force = 0;
 
+#define ADC_TO_AMP (0.0165f)
 static float kp = 0.001f;
 static float ki = 0.0002f;
 
@@ -157,8 +158,8 @@ void MotorControl(void)
 	// --- Voltage sensing ---
 	vbus_s = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2)*0.015f; // VBUS sensing
 
-    Ib = Ib_adc - Ib_adc0;
-    Ic = Ic_adc - Ic_adc0;
+    Ib = (Ib_adc - Ib_adc0)*ADC_TO_AMP;
+    Ic = (Ic_adc - Ic_adc0)*ADC_TO_AMP;
     Ia = -(Ib + Ic);
 
     // --- Electrical angle from encoder ---
@@ -172,6 +173,8 @@ void MotorControl(void)
     // --- Clarke Transform ---
     float is_alpha = Ia;
     float is_beta  = (Ia + 2.0f * Ic) / sqrtf(3.0f);
+    //float is_alpha = sqrtf(2/3.0f)*(Ia-0.5f*(Ib+Ic));
+	//float is_beta  = sqrtf(0.5f)*(Ib - Ic);
 
     // --- Park Transform ---
     id = cos_t * is_alpha + sin_t * is_beta;
@@ -182,25 +185,25 @@ void MotorControl(void)
 
     //iq_target = 0.0f;
 
-    float iq_target0 = calculateWheelForce(pos, speed, accel);
+    float iq_target0 = calculateWheelForce(pos, speed, accel)*ADC_TO_AMP;
 
     float dx = max(0, abs(pos) - 20480);
 
-    if(dx > 1 && ffb_active) iq_target0 = 5*dx*(pos<0 ? -1 : 1);
+    if(dx > 1 && ffb_active) iq_target0 = 5*dx*(pos<0 ? -1 : 1)*ADC_TO_AMP;
 
-    iq_target = CLAMP(iq_target0, -500, 500);
+    iq_target = CLAMP(iq_target0, -500*ADC_TO_AMP, 500*ADC_TO_AMP);
 
     // --- PI Controllers ---
-    vd0 = PI_Controller(id-id_target, &id_integral, kp, ki, MAX_VOLTAGE);
-    vq0 = PI_Controller(iq-iq_target, &iq_integral, kp, ki, MAX_VOLTAGE);
+    vd0 = PI_Controller(id-id_target, &id_integral, kp*(1/ADC_TO_AMP), ki*(1/ADC_TO_AMP), vbus_s*0.1f);
+    vq0 = PI_Controller(iq-iq_target, &iq_integral, kp*(1/ADC_TO_AMP), ki*(1/ADC_TO_AMP), vbus_s*0.25f);
 
-    vd = CLAMP(vd0, -1.5f, 1.5f);
-    vq = CLAMP(vq0, -6.0f, 6.0f);
+    //vd = CLAMP(vd0, -1.5f, 1.5f);
+    //vq = CLAMP(vq0, -6.0f, 6.0f);
 
 
     // --- Inverse Park Transform ---
-    valpha = vd * cos_t - vq * sin_t;
-    vbeta  = vd * sin_t + vq * cos_t;
+    valpha = vd0 * cos_t - vq0 * sin_t;
+    vbeta  = vd0 * sin_t + vq0 * cos_t;
 
     // --- αβ → abc conversion ---
     va = valpha;
@@ -208,10 +211,10 @@ void MotorControl(void)
     vc = -0.5f * valpha - (sqrtf(3.0f) / 2.0f) * vbeta;
 
     // --- Normalize to PWM duty ---
-    float period = (float)htim1.Init.Period;
-    float dutyA = (0.5f + 0.5f * va / MAX_VOLTAGE) * period;
-    float dutyB = (0.5f + 0.5f * vb / MAX_VOLTAGE) * period;
-    float dutyC = (0.5f + 0.5f * vc / MAX_VOLTAGE) * period;
+    int32_t period = htim1.Init.Period;
+    int32_t dutyA = (int32_t)(period>>1)+(int32_t)((va / vbus_s) * period);
+    int32_t dutyB = (int32_t)(period>>1)+(int32_t)((vb / vbus_s) * period);
+    int32_t dutyC = (int32_t)(period>>1)+(int32_t)((vc / vbus_s) * period);
 
     // Clamp to valid range
     dutyA = CLAMP(dutyA, 0, period);
@@ -228,7 +231,7 @@ void MotorControl(void)
 
     // --- Power draw
 
-    power = id*vd + iq*vq;
+    power = Ia*va+Ib*vc+Ic*vb;
 
 
     // --- Optional reporting ---
@@ -242,7 +245,9 @@ void MotorControl(void)
 float PI_Controller(float error, float* integral, float kp, float ki, float limit)
 {
     *integral += ki * error;
+    *integral = max(-limit, min(limit, *integral));
     float output = kp * error + *integral;
+    output = max(-limit, min(limit, output));
 
     return output;
 }
