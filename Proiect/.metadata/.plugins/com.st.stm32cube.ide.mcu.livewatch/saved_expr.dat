@@ -7,3 +7,6 @@ value
 vbus_s
 power
 maxpower
+Ia
+Ib
+Ic

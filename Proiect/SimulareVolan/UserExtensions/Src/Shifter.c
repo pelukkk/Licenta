@@ -13,14 +13,14 @@ int inGearCurrent = 0;
 
 void select_mux_channel(uint8_t channel)
 {
-    HAL_GPIO_WritePin(S0_MUX_GPIO_Port, S0_MUX_Pin, (channel & 0x01) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(S1_MUX_GPIO_Port, S1_MUX_Pin, (channel & 0x02) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(S2_MUX_GPIO_Port, S2_MUX_Pin, (channel & 0x04) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(S0_MUX_GPIO_Port, S0_MUX_Pin, (channel & 0x01) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(S1_MUX_GPIO_Port, S1_MUX_Pin, (channel & 0x02) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(S2_MUX_GPIO_Port, S2_MUX_Pin, (channel & 0x04) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
 GPIO_PinState read_mux_output(void)
 {
-    return HAL_GPIO_ReadPin(Z_MUX_GPIO_Port, Z_MUX_Pin);
+	return HAL_GPIO_ReadPin(Z_MUX_GPIO_Port, Z_MUX_Pin);
 }
 
 void UpdateShifter()
@@ -48,7 +48,7 @@ void UpdateShifter()
 					case 5: reportContainer.buttons = 0x00000020; break;
 					case 6: reportContainer.buttons = 0x00000040; break;
 					case 7: reportContainer.buttons = 0x00000080; break;
-					//default: reportContainer.buttons = 0;
+					default: reportContainer.buttons = 0;
 				}
 			}
 		}

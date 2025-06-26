@@ -1,0 +1,61 @@
+/*
+ * Pedals.c
+ *
+ *  Created on: May 27, 2025
+ *      Author: Marco
+ */
+
+#include "Pedals.h"
+
+extern wheelReport reportContainer;
+
+extern uint16_t adc3_buffer[3];
+
+extern ADC_HandleTypeDef hadc3;
+
+uint16_t clutchBuffer[FILTER_SIZE] = {0};
+uint8_t clutchIndex = 0;
+volatile uint16_t rawClutch = 0;
+uint16_t clutch = 0;
+
+uint16_t brakeBuffer[FILTER_SIZE] = {0};
+uint8_t brakeIndex = 0;
+volatile uint16_t rawBrake = 0;
+uint16_t brake = 0;;
+
+uint16_t throttleBuffer[FILTER_SIZE] = {0};
+uint8_t throttleIndex = 0;
+volatile uint16_t rawThrottle = 0;
+uint16_t throttle = 0;
+
+uint16_t FilterADC(uint16_t *buffer, uint8_t *index, uint16_t newSample)
+{
+    buffer[*index] = newSample;
+    *index = (*index + 1) % FILTER_SIZE;
+
+    uint32_t sum = 0;
+    for (int i = 0; i < FILTER_SIZE; i++) {
+        sum += buffer[i];
+    }
+
+    return sum / FILTER_SIZE;
+}
+
+void UpdatePedals()
+{
+	adc3_buffer[0] = HAL_ADCEx_InjectedGetValue(&hadc3, ADC_INJECTED_RANK_1);
+	adc3_buffer[1] = HAL_ADCEx_InjectedGetValue(&hadc3, ADC_INJECTED_RANK_2);
+	adc3_buffer[2] = HAL_ADCEx_InjectedGetValue(&hadc3, ADC_INJECTED_RANK_3);
+
+    rawClutch   = 5000 - adc3_buffer[0];  // ADC3_IN0
+    rawBrake    = 5000 - adc3_buffer[1];  // ADC3_IN1
+    rawThrottle = 5000 - adc3_buffer[2];  // ADC3_IN2
+
+    clutch   = FilterADC(clutchBuffer, &clutchIndex, rawClutch);
+    brake    = FilterADC(brakeBuffer, &brakeIndex, rawBrake);
+    throttle = FilterADC(throttleBuffer, &throttleIndex, rawThrottle);
+
+    reportContainer.RX = clutch;
+    reportContainer.RY = brake;
+    reportContainer.RZ = throttle;
+}

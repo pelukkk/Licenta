@@ -30,15 +30,16 @@ uint16_t throttle = 0;
 
 uint16_t FilterADC(uint16_t *buffer, uint8_t *index, uint16_t newSample)
 {
-    buffer[*index] = newSample;
-    *index = (*index + 1) % FILTER_SIZE;
+	buffer[*index] = newSample;
+	*index = (*index + 1) % FILTER_SIZE;
 
-    uint32_t sum = 0;
-    for (int i = 0; i < FILTER_SIZE; i++) {
-        sum += buffer[i];
-    }
+	uint32_t sum = 0;
+	for (int i = 0; i < FILTER_SIZE; i++)
+	{
+		sum += buffer[i];
+	}
 
-    return sum / FILTER_SIZE;
+	return sum / FILTER_SIZE;
 }
 
 void UpdatePedals()
