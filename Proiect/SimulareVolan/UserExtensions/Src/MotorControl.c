@@ -24,7 +24,7 @@ extern bool ffb_active;
 #define POLE_PAIRS 15
 
 #define ALIGN_MAGNITUDE 0.2f
-#define ALIGN_TIME_MS 2000  // time to hold the rotor in place
+#define ALIGN_TIME_MS 500  // time to hold the rotor in place
 
 // Motor speed and acceleration variables
 
@@ -63,8 +63,10 @@ static float ph = 0;
 int16_t force = 0;
 
 #define ADC_TO_AMP (0.0165f)
-static float kp = 0.025f;
-static float ki = 0.0005f;
+static float kp = 0.0001f;
+static float ki = 0.00001f;
+
+#define CURRENT_PID_CALIBRATION 0
 
 static int counter = 0;
 
@@ -76,7 +78,7 @@ void AlignElectricalZero()
 
 	float period = (float)htim1.Init.Period;
 	uint32_t ramp_time_ms = ALIGN_TIME_MS;
-	uint32_t step_delay_ms = 5;
+	uint32_t step_delay_ms = 1;
 	uint32_t steps = ramp_time_ms / step_delay_ms;
 
 	for (uint32_t i = 0; i < steps; i++)
@@ -106,7 +108,7 @@ void AlignElectricalZero()
 		HAL_Delay(step_delay_ms);
 	}
 
-	HAL_Delay(2000);
+	HAL_Delay(3500);
 
 	electrical_zero_count = (int16_t)__HAL_TIM_GET_COUNTER(&htim3);
 }
@@ -153,7 +155,7 @@ void SetupMotor()
 
 void MotorControl(void)
 {
-	//HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
 	// --- Current sensing ---
 	Ib_adc = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1);
 	Ic_adc = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1);
@@ -185,6 +187,8 @@ void MotorControl(void)
 
 	// --- Targets (iq_target to be set from force feedback) ---
 
+	#if CURRENT_PID_CALIBRATION
+
 	if(counter==0)HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
 
 	counter++;
@@ -199,19 +203,21 @@ void MotorControl(void)
 		counter=0;
 	iq_target = 0.0f;
 
-	/*
+	#else
+
 	float iq_target0 = calculateWheelForce(pos, speed, accel)*ADC_TO_AMP;
 
-	float dx = max(0, abs(pos) - 20480);
+	//float dx = max(0, abs(pos) - 20480);
 
-	if(dx > 1 && ffb_active) iq_target0 = 5*dx*(pos<0 ? -1 : 1)*ADC_TO_AMP;
+	//if(dx > 1 && ffb_active) iq_target0 += 5*dx*(pos<0 ? -1 : 1)*ADC_TO_AMP;
 
-	iq_target = CLAMP(iq_target0, -500*ADC_TO_AMP, 500*ADC_TO_AMP);
-	*/
+	iq_target = CLAMP(iq_target0, -950*ADC_TO_AMP, 950*ADC_TO_AMP);
+
+	#endif
 
 	// --- PI Controllers ---
 	vd0 = PI_Controller(id-id_target, &id_integral, kp*(1/ADC_TO_AMP), ki*(1/ADC_TO_AMP), vbus_s*0.1f);
-	vq0 = 0;//PI_Controller(iq-iq_target, &iq_integral, kp*(1/ADC_TO_AMP), ki*(1/ADC_TO_AMP), vbus_s*0.25f);
+	vq0 = PI_Controller(iq-iq_target, &iq_integral, kp*(1/ADC_TO_AMP), ki*(1/ADC_TO_AMP), vbus_s*0.25f);
 
 	//vd = CLAMP(vd0, -1.5f, 1.5f);
 	//vq = CLAMP(vq0, -6.0f, 6.0f);
@@ -256,7 +262,7 @@ void MotorControl(void)
 	reportContainer.Dial = id*vd + iq*vq;
 	reportContainer.Slider = vbus_s;
 
-	//HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
 }
 
 float PI_Controller(float error, float* integral, float kp, float ki, float limit)
